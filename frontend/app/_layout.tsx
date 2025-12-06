@@ -13,6 +13,12 @@ export default function RootLayout() {
           headerTintColor: '#2D2440',
         }} 
       />
+      <Stack.Screen 
+        name="(main)" 
+        options={{ 
+          headerShown: false,
+        }} 
+      />
     </Stack>
   );
 }

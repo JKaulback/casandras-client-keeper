@@ -1,18 +1,9 @@
-import {
-  View,
-  Text,
-  StyleSheet,
-  FlatList,
-  TextInput,
-  TouchableOpacity,
-  ActivityIndicator,
-  RefreshControl,
-} from "react-native";
+import { View, StyleSheet, FlatList, ActivityIndicator, RefreshControl, Text } from "react-native";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
-import { colors, spacing, typography, borderRadius, shadows, iconSizes } from "../../../styles/theme";
+import { colors, spacing } from "../../../styles/theme";
 import { customerService, Customer } from "../../../services/customerService";
+import { SearchBar, ListHeader, ListItemCard, EmptyState } from "../../../components/ListComponents";
 
 export default function CustomersIndex() {
   const router = useRouter();
@@ -61,46 +52,31 @@ export default function CustomersIndex() {
     }
   }, [searchQuery, customers]);
 
-  const renderCustomerItem = ({ item }: { item: Customer }) => (
-    <TouchableOpacity
-      style={styles.customerCard}
-      onPress={() => router.push(`/customers/${item._id}` as any)}
-    >
-      <View style={styles.customerIconContainer}>
-        <Ionicons name="person" size={iconSizes.base} color={colors.primary} />
-      </View>
-      
-      <View style={styles.customerInfo}>
-        <Text style={styles.customerName}>{item.name}</Text>
-        <Text style={styles.customerDetail}>
-          <Ionicons name="call" size={14} color={colors.textSecondary} /> {item.phone}
-        </Text>
-        {item.email && (
-          <Text style={styles.customerDetail}>
-            <Ionicons name="mail" size={14} color={colors.textSecondary} /> {item.email}
-          </Text>
-        )}
-        {item.occupation && (
-          <Text style={styles.customerDetail}>
-            <Ionicons name="briefcase" size={14} color={colors.textSecondary} /> {item.occupation}
-          </Text>
-        )}
-      </View>
+  const renderCustomerItem = ({ item }: { item: Customer }) => {
+    const details = [
+      { icon: "call" as const, text: item.phone },
+      ...(item.email ? [{ icon: "mail" as const, text: item.email }] : []),
+      ...(item.occupation ? [{ icon: "briefcase" as const, text: item.occupation }] : []),
+    ];
 
-      <Ionicons name="chevron-forward" size={iconSizes.base} color={colors.textLight} />
-    </TouchableOpacity>
-  );
+    return (
+      <ListItemCard
+        icon="person"
+        iconColor={colors.primary}
+        iconBackgroundColor={colors.primaryLight}
+        title={item.name}
+        details={details}
+        onPress={() => router.push(`/customers/${item._id}` as any)}
+      />
+    );
+  };
 
   const renderEmptyState = () => (
-    <View style={styles.emptyState}>
-      <Ionicons name="people-outline" size={64} color={colors.textLight} />
-      <Text style={styles.emptyStateText}>
-        {searchQuery ? "No customers found" : "No customers yet"}
-      </Text>
-      <Text style={styles.emptyStateSubtext}>
-        {searchQuery ? "Try a different search term" : "Add your first customer to get started"}
-      </Text>
-    </View>
+    <EmptyState
+      icon="people-outline"
+      title={searchQuery ? "No customers found" : "No customers yet"}
+      subtitle={searchQuery ? "Try a different search term" : "Add your first customer to get started"}
+    />
   );
 
   if (loading) {
@@ -114,38 +90,20 @@ export default function CustomersIndex() {
 
   return (
     <View style={styles.container}>
-      {/* Search Bar */}
-      <View style={styles.searchContainer}>
-        <Ionicons name="search" size={20} color={colors.textSecondary} style={styles.searchIcon} />
-        <TextInput
-          style={styles.searchInput}
-          placeholder="Search customers..."
-          placeholderTextColor={colors.textSecondary}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-        />
-        {searchQuery.length > 0 && (
-          <TouchableOpacity onPress={() => setSearchQuery("")}>
-            <Ionicons name="close-circle" size={20} color={colors.textSecondary} />
-          </TouchableOpacity>
-        )}
-      </View>
+      <SearchBar
+        placeholder="Search customers..."
+        value={searchQuery}
+        onChangeText={setSearchQuery}
+        onClear={() => setSearchQuery("")}
+      />
 
-      {/* Customer Count */}
-      <View style={styles.headerRow}>
-        <Text style={styles.countText}>
-          {filteredCustomers.length} {filteredCustomers.length === 1 ? "customer" : "customers"}
-        </Text>
-        <TouchableOpacity
-          style={styles.addButton}
-          onPress={() => router.push("/customers/new" as any)}
-        >
-          <Ionicons name="add" size={20} color={colors.surface} />
-          <Text style={styles.addButtonText}>Add Customer</Text>
-        </TouchableOpacity>
-      </View>
+      <ListHeader
+        count={filteredCustomers.length}
+        itemName="customer"
+        buttonLabel="Add Customer"
+        onAddPress={() => router.push("/customers/new" as any)}
+      />
 
-      {/* Customer List */}
       <FlatList
         data={filteredCustomers}
         renderItem={renderCustomerItem}
@@ -177,104 +135,12 @@ const styles = StyleSheet.create({
   },
   loadingText: {
     marginTop: spacing.base,
-    fontSize: typography.fontSize.base,
+    fontSize: 14,
     color: colors.textSecondary,
-  },
-  searchContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.surface,
-    margin: spacing.base,
-    paddingHorizontal: spacing.base,
-    borderRadius: borderRadius.md,
-    ...shadows.small,
-  },
-  searchIcon: {
-    marginRight: spacing.sm,
-  },
-  searchInput: {
-    flex: 1,
-    paddingVertical: spacing.md,
-    fontSize: typography.fontSize.base,
-    color: colors.text,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    alignItems: "center",
-    paddingHorizontal: spacing.base,
-    marginBottom: spacing.sm,
-  },
-  countText: {
-    fontSize: typography.fontSize.base,
-    color: colors.textSecondary,
-    fontWeight: typography.fontWeight.medium,
-  },
-  addButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.sm,
-    paddingHorizontal: spacing.base,
-    borderRadius: borderRadius.base,
-    gap: spacing.xs,
-  },
-  addButtonText: {
-    color: colors.surface,
-    fontSize: typography.fontSize.sm,
-    fontWeight: typography.fontWeight.semibold,
   },
   listContainer: {
     padding: spacing.base,
     paddingTop: 0,
   },
-  customerCard: {
-    flexDirection: "row",
-    alignItems: "center",
-    backgroundColor: colors.surface,
-    padding: spacing.base,
-    borderRadius: borderRadius.md,
-    marginBottom: spacing.md,
-    ...shadows.medium,
-  },
-  customerIconContainer: {
-    width: 48,
-    height: 48,
-    borderRadius: borderRadius.md,
-    backgroundColor: colors.primaryLight,
-    justifyContent: "center",
-    alignItems: "center",
-    marginRight: spacing.base,
-  },
-  customerInfo: {
-    flex: 1,
-  },
-  customerName: {
-    fontSize: typography.fontSize.lg,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.text,
-    marginBottom: spacing.xs,
-  },
-  customerDetail: {
-    fontSize: typography.fontSize.sm,
-    color: colors.textSecondary,
-    marginTop: 2,
-  },
-  emptyState: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: spacing.xxxl * 2,
-  },
-  emptyStateText: {
-    fontSize: typography.fontSize.lg,
-    fontWeight: typography.fontWeight.semibold,
-    color: colors.text,
-    marginTop: spacing.base,
-  },
-  emptyStateSubtext: {
-    fontSize: typography.fontSize.base,
-    color: colors.textSecondary,
-    marginTop: spacing.xs,
-    textAlign: "center",
-  },
 });
+

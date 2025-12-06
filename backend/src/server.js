@@ -33,9 +33,11 @@ app.use(cors({
 // Routes
 const userRoutes = require('./routes/userRoutes');
 const customerRoutes = require('./routes/customerRoutes');
+const dogRoutes = require('./routes/dogRoutes');
 
 app.use('/api/users', userRoutes);
 app.use('/api/customers', customerRoutes);
+app.use('/api/dogs', dogRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {

@@ -3,8 +3,7 @@
  * All customer-related API calls
  */
 
-import axios from 'axios';
-import API_BASE_URL from './api';
+import api from './api';
 
 interface Customer {
   _id: string;
@@ -22,24 +21,6 @@ interface ApiResponse<T> {
   count?: number;
   data: T;
 }
-
-// Create axios instance with base configuration
-const api = axios.create({
-  baseURL: API_BASE_URL,
-  timeout: 10000,
-  headers: {
-    'Content-Type': 'application/json',
-  },
-});
-
-// Response interceptor to handle API response format
-api.interceptors.response.use(
-  (response) => response.data,
-  (error) => {
-    console.error('API Error:', error.response?.data || error.message);
-    throw error;
-  }
-);
 
 export const customerService = {
   /**

@@ -1,8 +1,9 @@
 /**
  * API Configuration
- * Centralized API endpoint and configuration
+ * Centralized axios instance for all API calls
  */
 
+import axios from 'axios';
 import { Platform } from 'react-native';
 
 // Get API URL from environment variable
@@ -24,6 +25,22 @@ const getApiBaseUrl = () => {
   }
 };
 
-const API_BASE_URL = getApiBaseUrl();
+// Create axios instance with base configuration
+const api = axios.create({
+  baseURL: getApiBaseUrl(),
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
 
-export default API_BASE_URL;
+// Response interceptor to unwrap API response format
+api.interceptors.response.use(
+  (response) => response.data,
+  (error) => {
+    console.error('API Error:', error.response?.data || error.message);
+    throw error;
+  }
+);
+
+export default api;

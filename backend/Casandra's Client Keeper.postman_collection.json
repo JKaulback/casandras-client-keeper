@@ -1,0 +1,1315 @@
+{
+	"info": {
+		"_postman_id": "3a596bb9-4073-4790-8eb0-ee03e765cb05",
+		"name": "Casandra's Client Keeper",
+		"description": "API endpoints for User CRUD operations",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "41678753"
+	},
+	"item": [
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get All Users",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							]
+						},
+						"description": "Retrieve all users from the database"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69346982ae2c0ec0c7701b21",
+									"description": "User ID (replace with actual ID from database)"
+								}
+							]
+						},
+						"description": "Get a single user by their MongoDB ObjectId"
+					},
+					"response": []
+				},
+				{
+					"name": "Get User by OAuth ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}/oauth/:oauthId",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							],
+							"path": [
+								"oauth",
+								":oauthId"
+							],
+							"variable": [
+								{
+									"key": "oauthId",
+									"value": "google_admin_123",
+									"description": "OAuth ID from provider"
+								}
+							]
+						},
+						"description": "Find user by their OAuth ID (used for login)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Google)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"email\": \"john.doe@gmail.com\",\n  \"phone\": \"902-555-1234\",\n  \"oauthProvider\": \"google\",\n  \"oauthId\": \"google_123456789\",\n  \"avatarUrl\": \"https://lh3.googleusercontent.com/a/example\",\n  \"role\": \"customer\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							]
+						},
+						"description": "Create a new user with Google OAuth"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Facebook)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Jane Smith\",\n  \"email\": \"jane.smith@example.com\",\n  \"phone\": \"902-555-5678\",\n  \"oauthProvider\": \"facebook\",\n  \"oauthId\": \"facebook_987654321\",\n  \"avatarUrl\": \"https://graph.facebook.com/picture\",\n  \"role\": \"customer\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							]
+						},
+						"description": "Create a new user with Facebook OAuth"
+					},
+					"response": []
+				},
+				{
+					"name": "Create User (Apple)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Bob Johnson\",\n  \"email\": \"bob.johnson@icloud.com\",\n  \"phone\": \"902-555-9999\",\n  \"oauthProvider\": \"apple\",\n  \"oauthId\": \"apple_001122334455\",\n  \"role\": \"customer\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							]
+						},
+						"description": "Create a new user with Apple OAuth"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Admin User",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Casandra Admin\",\n  \"email\": \"casandra@clientkeeper.com\",\n  \"phone\": \"902-555-0000\",\n  \"oauthProvider\": \"google\",\n  \"oauthId\": \"google_admin_123\",\n  \"avatarUrl\": \"https://example.com/avatar.jpg\",\n  \"role\": \"admin\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							]
+						},
+						"description": "Create an admin user"
+					},
+					"response": []
+				},
+				{
+					"name": "Update User",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Updated Doe\",\n  \"email\": \"john.updated@gmail.com\",\n  \"phone\": \"902-555-1111\",\n  \"avatarUrl\": \"https://example.com/new-avatar.jpg\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69346972ae2c0ec0c7701b1b",
+									"description": "User ID (replace with actual ID)"
+								}
+							]
+						},
+						"description": "Update user information (cannot update oauthProvider or oauthId)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete User",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{USERS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{USERS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6934697eae2c0ec0c7701b1e",
+									"description": "User ID (replace with actual ID)"
+								}
+							]
+						},
+						"description": "Delete a user from the database"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Customers",
+			"item": [
+				{
+					"name": "Get All Customers",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							]
+						},
+						"description": "Retrieve all customers from the database"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Customer by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "675321abc123def456789012",
+									"description": "Customer ID (replace with actual ID from database)"
+								}
+							]
+						},
+						"description": "Get a single customer by their MongoDB ObjectId"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Customer",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Sarah Johnson\",\n  \"phone\": \"902-555-1234\",\n  \"email\": \"sarah.johnson@example.com\",\n  \"occupation\": \"Veterinarian\",\n  \"address\": \"123 Main St, Halifax, NS B3H 2Y1\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							]
+						},
+						"description": "Create a new customer"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Customer (No Email)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Mike Thompson\",\n  \"phone\": \"902-555-5678\",\n  \"occupation\": \"Teacher\",\n  \"address\": \"456 Oak Ave, Dartmouth, NS B2Y 4H8\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							]
+						},
+						"description": "Create a customer without email (optional field)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Customer (Linked to User)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"John Doe\",\n  \"phone\": \"902-555-1234\",\n  \"email\": \"john.doe@gmail.com\",\n  \"occupation\": \"Software Developer\",\n  \"address\": \"789 Pine Rd, Bedford, NS B4A 1A1\",\n  \"userId\": \"69346972ae2c0ec0c7701b1b\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							]
+						},
+						"description": "Create a customer linked to an existing user account (replace userId with actual user ID)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Customer",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Sarah Updated Johnson\",\n  \"phone\": \"902-555-1111\",\n  \"email\": \"sarah.updated@example.com\",\n  \"occupation\": \"Senior Veterinarian\",\n  \"address\": \"123 Main St, Unit 5, Halifax, NS B3H 2Y1\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "6934719259631380cb2ac38d",
+									"description": "Customer ID (replace with actual ID)"
+								}
+							]
+						},
+						"description": "Update customer information"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}/search?q=John",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "John",
+									"description": "Search term for name, phone, or email"
+								}
+							]
+						},
+						"description": "Search customers by name (case-insensitive)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by Phone",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}/search?q=902-555",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "902-555",
+									"description": "Search term for name, phone, or email"
+								}
+							]
+						},
+						"description": "Search customers by phone number (partial match)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Customers by Email",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}/search?q=example.com",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "example.com",
+									"description": "Search term for name, phone, or email"
+								}
+							]
+						},
+						"description": "Search customers by email domain or address"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Customer",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{CUSTOMERS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{CUSTOMERS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "693471a259631380cb2ac38f",
+									"description": "Customer ID (replace with actual ID)"
+								}
+							]
+						},
+						"description": "Delete a customer from the database"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dogs",
+			"item": [
+				{
+					"name": "Get All Dogs",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							]
+						},
+						"description": "Retrieve all dogs from the database with populated owner information"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dog by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347689e6d38fe615fabf57",
+									"description": "Dog ID (replace with actual ID from database)"
+								}
+							]
+						},
+						"description": "Get a single dog by their MongoDB ObjectId"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Dogs by Owner",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}/owner/:ownerId",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							],
+							"path": [
+								"owner",
+								":ownerId"
+							],
+							"variable": [
+								{
+									"key": "ownerId",
+									"value": "693472ba59631380cb2ac391",
+									"description": "Customer ID (owner of the dogs)"
+								}
+							]
+						},
+						"description": "Get all dogs belonging to a specific customer/owner"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Dog (Full Details)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ownerId\": \"693472ba59631380cb2ac391\",\n  \"name\": \"Max\",\n  \"sex\": \"male\",\n  \"breed\": \"Golden Retriever\",\n  \"dob\": \"2020-05-15\",\n  \"color\": \"Golden\",\n  \"weight\": 32,\n  \"vet\": \"Halifax Veterinary Clinic\",\n  \"medicalInfo\": \"Allergic to chicken\",\n  \"rabiesVaccineDate\": \"2024-01-15\",\n  \"areVaccinesCurrent\": true,\n  \"isFixed\": true,\n  \"temperament\": \"Friendly and energetic\",\n  \"imageURL\": \"https://example.com/max.jpg\",\n  \"notes\": \"Loves treats and belly rubs\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							]
+						},
+						"description": "Create a new dog with full details (replace ownerId with actual customer ID)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Dog (Minimal)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ownerId\": \"6934719259631380cb2ac38d\",\n  \"name\": \"Bella\",\n  \"sex\": \"female\",\n  \"breed\": \"Labrador\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							]
+						},
+						"description": "Create a dog with minimal required information"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Dog (Small Breed)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ownerId\": \"6934734059631380cb2ac39b\",\n  \"name\": \"Charlie\",\n  \"sex\": \"male\",\n  \"breed\": \"Chihuahua\",\n  \"dob\": \"2022-03-20\",\n  \"color\": \"Brown\",\n  \"weight\": 3,\n  \"vet\": \"Dartmouth Animal Hospital\",\n  \"areVaccinesCurrent\": true,\n  \"isFixed\": false,\n  \"temperament\": \"Nervous around strangers\",\n  \"notes\": \"Small and fragile, handle with care\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							]
+						},
+						"description": "Create a small breed dog example"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Dog (Puppy)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"ownerId\": \"693472ba59631380cb2ac391\",\n  \"name\": \"Luna\",\n  \"sex\": \"female\",\n  \"breed\": \"German Shepherd\",\n  \"dob\": \"2024-08-10\",\n  \"color\": \"Black and Tan\",\n  \"weight\": 8,\n  \"vet\": \"Bedford Vet Services\",\n  \"areVaccinesCurrent\": true,\n  \"isFixed\": false,\n  \"temperament\": \"Playful and curious\",\n  \"notes\": \"Still in training, very energetic\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							]
+						},
+						"description": "Create a puppy example"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Dog",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"name\": \"Max Updated\",\n  \"weight\": 34,\n  \"vet\": \"New Vet Clinic\",\n  \"rabiesVaccineDate\": \"2024-12-01\",\n  \"areVaccinesCurrent\": true,\n  \"temperament\": \"Very friendly and well-trained\",\n  \"notes\": \"Updated medical records\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347639e6d38fe615fabf4f",
+									"description": "Dog ID (replace with actual ID)"
+								}
+							]
+						},
+						"description": "Update dog information"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Dog Weight",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"weight\": 35\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347639e6d38fe615fabf4f",
+									"description": "Dog ID"
+								}
+							]
+						},
+						"description": "Update just the weight (partial update)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Dogs by Name",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}/search?q=Max",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "Max",
+									"description": "Search term for dog name or breed"
+								}
+							]
+						},
+						"description": "Search dogs by name (case-insensitive)"
+					},
+					"response": []
+				},
+				{
+					"name": "Search Dogs by Breed",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}/search?q=lab",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							],
+							"path": [
+								"search"
+							],
+							"query": [
+								{
+									"key": "q",
+									"value": "lab",
+									"description": "Search term for dog name or breed"
+								}
+							]
+						},
+						"description": "Search dogs by breed (case-insensitive, partial match)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Dog",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{DOGS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{DOGS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347663e6d38fe615fabf53",
+									"description": "Dog ID (replace with actual ID)"
+								}
+							]
+						},
+						"description": "Delete a dog from the database"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Appointments",
+			"item": [
+				{
+					"name": "Get All Appointments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							]
+						},
+						"description": "Retrieve all appointments from the database, sorted by date/time"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointment by ID",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347bde7bffe3b3d76d691a",
+									"description": "Appointment ID (replace with actual ID from database)"
+								}
+							]
+						},
+						"description": "Get a single appointment by its MongoDB ObjectId"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointments by Customer",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/customer/:customerId",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								"customer",
+								":customerId"
+							],
+							"variable": [
+								{
+									"key": "customerId",
+									"value": "693472ba59631380cb2ac391",
+									"description": "Customer ID"
+								}
+							]
+						},
+						"description": "Get all appointments for a specific customer"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointments by Dog",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/dog/:dogId",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								"dog",
+								":dogId"
+							],
+							"variable": [
+								{
+									"key": "dogId",
+									"value": "693476a0e6d38fe615fabf5b",
+									"description": "Dog ID"
+								}
+							]
+						},
+						"description": "Get all appointments for a specific dog"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointments by Date Range",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/range?start=2025-12-01&end=2025-12-31",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								"range"
+							],
+							"query": [
+								{
+									"key": "start",
+									"value": "2025-12-01",
+									"description": "Start date (YYYY-MM-DD)"
+								},
+								{
+									"key": "end",
+									"value": "2025-12-31",
+									"description": "End date (YYYY-MM-DD)"
+								}
+							]
+						},
+						"description": "Get appointments within a specific date range"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Confirmed Appointments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/status/confirmed",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								"status",
+								"confirmed"
+							]
+						},
+						"description": "Get all confirmed appointments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Pending Appointments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/status/pending",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								"status",
+								"pending"
+							]
+						},
+						"description": "Get all pending appointments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Completed Appointments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/status/completed",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								"status",
+								"completed"
+							]
+						},
+						"description": "Get all completed appointments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Cancelled Appointments",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/status/cancelled",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								"status",
+								"cancelled"
+							]
+						},
+						"description": "Get all cancelled appointments"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Appointment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"693472ba59631380cb2ac391\",\n  \"dogId\": \"69347639e6d38fe615fabf4f\",\n  \"dateTime\": \"2025-12-15T10:00:00\",\n  \"durationMinutes\": 60,\n  \"cost\": 50,\n  \"status\": \"confirmed\",\n  \"notes\": \"First grooming session for Max\",\n  \"paymentStatus\": \"unpaid\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							]
+						},
+						"description": "Create a new appointment (replace customerId and dogId with actual IDs)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Appointment (Minimal)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"6934734059631380cb2ac39b\",\n  \"dogId\": \"69347689e6d38fe615fabf57\",\n  \"dateTime\": \"2025-12-20T14:00:00\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							]
+						},
+						"description": "Create appointment with minimal required fields (uses defaults)"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Appointment (Extended Duration)",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"693472ba59631380cb2ac391\",\n  \"dogId\": \"693476a0e6d38fe615fabf5b\",\n  \"dateTime\": \"2025-12-18T09:00:00\",\n  \"durationMinutes\": 120,\n  \"cost\": 85,\n  \"status\": \"confirmed\",\n  \"notes\": \"Full grooming package including bath, haircut, and nail trim\",\n  \"paymentStatus\": \"unpaid\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							]
+						},
+						"description": "Create appointment with extended duration"
+					},
+					"response": []
+				},
+				{
+					"name": "Create Recurring Appointment",
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"customerId\": \"693472ba59631380cb2ac391\",\n  \"dogId\": \"69347639e6d38fe615fabf4f\",\n  \"dateTime\": \"2025-12-10T15:00:00\",\n  \"durationMinutes\": 60,\n  \"cost\": 50,\n  \"status\": \"confirmed\",\n  \"notes\": \"Weekly grooming appointment\",\n  \"isRecurring\": true,\n  \"recurrenceRule\": {\n    \"frequency\": \"weekly\",\n    \"interval\": 1,\n    \"byDay\": [\"TU\"],\n    \"endDate\": \"2026-06-10\"\n  },\n  \"paymentStatus\": \"unpaid\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							]
+						},
+						"description": "Create a recurring appointment (weekly example)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Appointment",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"dateTime\": \"2025-12-15T11:00:00\",\n  \"durationMinutes\": 90,\n  \"cost\": 65,\n  \"status\": \"confirmed\",\n  \"notes\": \"Rescheduled to 11:00 AM, added extra services\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347ba47bffe3b3d76d6913",
+									"description": "Appointment ID"
+								}
+							]
+						},
+						"description": "Update appointment details"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Appointment Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"status\": \"pending\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347bde7bffe3b3d76d691a",
+									"description": "Appointment ID"
+								}
+							]
+						},
+						"description": "Update appointment status (e.g., mark as completed)"
+					},
+					"response": []
+				},
+				{
+					"name": "Update Payment Status",
+					"request": {
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Content-Type",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n  \"paymentStatus\": \"paid\",\n  \"transactionId\": \"pi_1234567890abcdef\"\n}"
+						},
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347bde7bffe3b3d76d691a",
+									"description": "Appointment ID"
+								}
+							]
+						},
+						"description": "Update payment status with transaction ID"
+					},
+					"response": []
+				},
+				{
+					"name": "Cancel Appointment (Soft Delete)",
+					"request": {
+						"method": "PATCH",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/:id/cancel",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								":id",
+								"cancel"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347c837bffe3b3d76d6928",
+									"description": "Appointment ID"
+								}
+							]
+						},
+						"description": "Cancel an appointment (sets status to 'cancelled' without deleting)"
+					},
+					"response": []
+				},
+				{
+					"name": "Delete Appointment",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{APPOINTMENTS_API}}/:id",
+							"host": [
+								"{{BASE_URL}}{{APPOINTMENTS_API}}"
+							],
+							"path": [
+								":id"
+							],
+							"variable": [
+								{
+									"key": "id",
+									"value": "69347c877bffe3b3d76d692f",
+									"description": "Appointment ID"
+								}
+							]
+						},
+						"description": "Permanently delete an appointment from the database"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health Check",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{BASE_URL}}/",
+					"host": [
+						"{{BASE_URL}}"
+					],
+					"path": [
+						""
+					]
+				},
+				"description": "Test if the server is running"
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"requests": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "BASE_URL",
+			"value": ""
+		},
+		{
+			"key": "USERS_API",
+			"value": ""
+		},
+		{
+			"key": "CUSTOMERS_API",
+			"value": ""
+		},
+		{
+			"key": "DOGS_API",
+			"value": ""
+		},
+		{
+			"key": "APPOINTMENTS_API",
+			"value": "",
+			"type": "default"
+		}
+	]
+}

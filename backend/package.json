@@ -3,11 +3,14 @@
   "version": "1.0.0",
   "description": "Backend for Casandra's Client Keeper",
   "main": "src/server.js",
-  
-"scripts": {
-  "start": "node src/server.js",
-  "dev": "nodemon src/server.js"
-},
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "build": "echo 'No build step required'"
+  },
   "author": "Justin Kaulback",
   "license": "MIT",
   "dependencies": {

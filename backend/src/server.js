@@ -4,11 +4,31 @@ const connectDB = require('./db/connectDB');
 require('dotenv').config();
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 10000;
 
 // Middleware
 app.use(express.json());
-app.use(cors({ origin: 'http://localhost:19006' }));
+
+// CORS configuration - allows localhost and Azure frontend
+const allowedOrigins = [
+  'http://localhost:19006',
+  'http://localhost:8081',
+  process.env.FRONTEND_URL // Add your Azure frontend URL as environment variable
+].filter(Boolean);
+
+app.use(cors({ 
+  origin: function(origin, callback) {
+    // Allow requests with no origin (mobile apps, Postman, etc.)
+    if (!origin) return callback(null, true);
+    
+    if (allowedOrigins.indexOf(origin) !== -1) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true
+}));
 
 // Basic route for testing
 app.get('/', (req, res) => {

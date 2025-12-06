@@ -12,15 +12,7 @@ import { useRouter } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { useState, useEffect } from "react";
 import { colors, spacing, typography, borderRadius, shadows, iconSizes } from "../../../styles/theme";
-
-interface Customer {
-  _id: string;
-  name: string;
-  phone: string;
-  email?: string;
-  occupation?: string;
-  address?: string;
-}
+import { customerService, Customer } from "../../../services/customerService";
 
 export default function CustomersIndex() {
   const router = useRouter();
@@ -30,26 +22,12 @@ export default function CustomersIndex() {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
 
-  // TODO: Replace with your actual API endpoint
-  const API_URL = "http://localhost:5000/api/customers";
-
   const fetchCustomers = async () => {
     try {
       setLoading(true);
-      // TODO: Uncomment when backend is ready
-      // const response = await fetch(API_URL);
-      // const data = await response.json();
-      // setCustomers(data);
-      // setFilteredCustomers(data);
-      
-      // Mock data for now
-      const mockData: Customer[] = [
-        { _id: "1", name: "Sarah Johnson", phone: "(555) 123-4567", email: "sarah@email.com", occupation: "Teacher" },
-        { _id: "2", name: "Mike Williams", phone: "(555) 234-5678", email: "mike@email.com", occupation: "Engineer" },
-        { _id: "3", name: "Emily Davis", phone: "(555) 345-6789", email: "emily@email.com", occupation: "Designer" },
-      ];
-      setCustomers(mockData);
-      setFilteredCustomers(mockData);
+      const data = await customerService.getAll();
+      setCustomers(data);
+      setFilteredCustomers(data);
     } catch (error) {
       console.error("Error fetching customers:", error);
     } finally {

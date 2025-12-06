@@ -13,6 +13,8 @@ app.use(express.json());
 const allowedOrigins = [
   'http://localhost:19006',
   'http://localhost:8081',
+  'http://localhost:19000',
+  'http://10.0.2.2:10000', // Android emulator
   process.env.FRONTEND_URL // Add your deployed frontend URL as environment variable
 ].filter(Boolean);
 

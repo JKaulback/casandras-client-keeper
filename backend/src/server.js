@@ -9,11 +9,11 @@ const PORT = process.env.PORT || 10000;
 // Middleware
 app.use(express.json());
 
-// CORS configuration - allows localhost and Azure frontend
+// CORS configuration - allows localhost and deployed frontend
 const allowedOrigins = [
   'http://localhost:19006',
   'http://localhost:8081',
-  process.env.FRONTEND_URL // Add your Azure frontend URL as environment variable
+  process.env.FRONTEND_URL // Add your deployed frontend URL as environment variable
 ].filter(Boolean);
 
 app.use(cors({ 
@@ -29,6 +29,13 @@ app.use(cors({
   },
   credentials: true
 }));
+
+// Routes
+const userRoutes = require('./routes/userRoutes');
+const customerRoutes = require('./routes/customerRoutes');
+
+app.use('/api/users', userRoutes);
+app.use('/api/customers', customerRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {

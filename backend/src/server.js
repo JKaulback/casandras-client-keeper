@@ -34,10 +34,12 @@ app.use(cors({
 const userRoutes = require('./routes/userRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const dogRoutes = require('./routes/dogRoutes');
+const appointmentRoutes = require('./routes/appointmentRoutes');
 
 app.use('/api/users', userRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/dogs', dogRoutes);
+app.use('/api/appointments', appointmentRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {

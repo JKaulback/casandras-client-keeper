@@ -1,1 +1,0 @@
-app.use(cors({ origin: 'http://localhost:19006' }));

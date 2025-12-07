@@ -25,10 +25,6 @@ export default function CustomerDetailScreen() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchCustomer();
-  }, [id]);
-
   const fetchCustomer = async () => {
     try {
       setLoading(true);
@@ -42,6 +38,11 @@ export default function CustomerDetailScreen() {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    fetchCustomer();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [id]);
 
   const handleDelete = () => {
     Alert.alert(

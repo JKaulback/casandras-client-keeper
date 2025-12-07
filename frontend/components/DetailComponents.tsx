@@ -3,7 +3,7 @@
  * For customer, dog, and appointment detail views
  */
 
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ActivityIndicator } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, spacing, typography, borderRadius, shadows } from "../styles/theme";
 
@@ -112,7 +112,6 @@ interface LoadingStateProps {
 }
 
 export function LoadingState({ message = "Loading..." }: LoadingStateProps) {
-  const ActivityIndicator = require("react-native").ActivityIndicator;
   return (
     <View style={styles.loadingContainer}>
       <ActivityIndicator size="large" color={colors.primary} />

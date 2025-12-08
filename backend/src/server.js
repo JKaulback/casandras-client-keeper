@@ -1,6 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
+const passport = require('passport');
 const connectDB = require('./db/connectDB');
 const logger = require('./utils/logger');
 require('dotenv').config();
@@ -42,12 +43,17 @@ app.use(cors({
   credentials: true
 }));
 
+// Initialize passport
+app.use(passport.initialize());
+
 // Routes
+const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const dogRoutes = require('./routes/dogRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 
+app.use('/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/dogs', dogRoutes);

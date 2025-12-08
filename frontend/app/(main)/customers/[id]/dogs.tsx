@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState, useCallback, useLayoutEffect } from "react";
-import { View, StyleSheet, FlatList, RefreshControl, Alert, Text } from "react-native";
+import { View, StyleSheet, FlatList, RefreshControl, Alert, Text, TouchableOpacity } from "react-native";
 import { useLocalSearchParams, useRouter, Stack, useNavigation } from "expo-router";
 import { dogService, Dog } from "../../../../services/dogService";
 import { customerService, Customer } from "../../../../services/customerService";
@@ -16,6 +16,7 @@ import {
   EmptyState,
 } from "../../../../components/ListComponents";
 import { LoadingState } from "../../../../components/StateComponents";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function CustomerDogsScreen() {
   const { id } = useLocalSearchParams();

@@ -1,7 +1,16 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../styles/theme";
 
 export default function MainLayout() {
+  const router = useRouter();
+
+  const handleHomePress = () => {
+    router.dismissAll();
+    router.replace("/");
+  };
+
   return (
     <Stack
       screenOptions={{
@@ -10,6 +19,11 @@ export default function MainLayout() {
         },
         headerTintColor: colors.text,
         headerShadowVisible: false,
+        headerRight: () => (
+          <TouchableOpacity onPress={handleHomePress} style={{ marginRight: 8 }}>
+            <Ionicons name="home" size={24} color={colors.primary} />
+          </TouchableOpacity>
+        ),
       }}
     >
       <Stack.Screen 

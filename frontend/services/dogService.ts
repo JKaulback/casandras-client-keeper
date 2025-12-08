@@ -4,10 +4,11 @@
  */
 
 import api from './api';
+import { Customer } from './customerService';
 
 interface Dog {
   _id: string;
-  ownerId: string;
+  ownerId: Customer; // Populated with customer data including _id
   name: string;
   sex: 'male' | 'female' | 'unknown';
   breed?: string;

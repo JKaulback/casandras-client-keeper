@@ -6,7 +6,7 @@ const Dog = require('../models/Dog');
 exports.getAllDogs = async (req, res) => {
   try {
     const dogs = await Dog.find()
-      .populate('ownerId', 'name phone email')
+      .populate('ownerId', '_id name phone email')
       .sort({ createdAt: -1 });
     
     res.json({
@@ -28,7 +28,7 @@ exports.getAllDogs = async (req, res) => {
 exports.getDogById = async (req, res) => {
   try {
     const dog = await Dog.findById(req.params.id)
-      .populate('ownerId', 'name phone email');
+      .populate('ownerId', '_id name phone email');
     
     if (!dog) {
       return res.status(404).json({
@@ -55,7 +55,7 @@ exports.getDogById = async (req, res) => {
 exports.getDogsByOwner = async (req, res) => {
   try {
     const dogs = await Dog.find({ ownerId: req.params.ownerId })
-      .populate('ownerId', 'name phone email')
+      .populate('ownerId', '_id name phone email')
       .sort({ name: 1 });
     
     res.json({

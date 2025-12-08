@@ -100,7 +100,7 @@ export default function CustomerDetailScreen() {
 
       <DetailSection title="Quick Actions">
         <ActionButton icon="calendar" iconColor={colors.primary} label="Schedule Appointment" onPress={() => {}} />
-        <ActionButton icon="paw" iconColor={colors.secondary} label="View Dogs" onPress={() => {}} />
+        <ActionButton icon="paw" iconColor={colors.secondary} label="View Dogs" onPress={() => router.push(`/customers/${id}/dogs`)} />
         <ActionButton icon="time" iconColor={colors.accent} label="Appointment History" onPress={() => {}} isLast />
       </DetailSection>
 

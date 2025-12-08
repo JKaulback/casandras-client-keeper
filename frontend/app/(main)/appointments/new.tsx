@@ -22,7 +22,7 @@ import {
   FormField, 
   FormSection, 
   SelectField, 
-  DateTimeField,
+  AppointmentDateTimePicker,
   FormActions 
 } from "../../../components/FormComponents";
 
@@ -62,7 +62,7 @@ export default function NewAppointmentScreen() {
   const [submitting, setSubmitting] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [dogs, setDogs] = useState<Dog[]>([]);
-  const [loadingData, setLoadingData] = useState(true);
+  const [appointments, setAppointments] = useState<{ dateTime: string; durationMinutes: number }[]>([]);
 
   useEffect(() => {
     fetchData();
@@ -70,17 +70,20 @@ export default function NewAppointmentScreen() {
 
   const fetchData = async () => {
     try {
-      const [customersData, dogsData] = await Promise.all([
+      const [customersData, dogsData, appointmentsData] = await Promise.all([
         customerService.getAll(),
         dogService.getAll(),
+        appointmentService.getAll(),
       ]);
       setCustomers(customersData);
       setDogs(dogsData);
+      setAppointments(appointmentsData.map(apt => ({
+        dateTime: apt.dateTime,
+        durationMinutes: apt.durationMinutes,
+      })));
     } catch (error) {
       console.error("Error fetching data:", error);
       Alert.alert("Error", "Failed to load customers and dogs");
-    } finally {
-      setLoadingData(false);
     }
   };
 
@@ -229,13 +232,13 @@ export default function NewAppointmentScreen() {
           </FormSection>
 
           <FormSection title="Appointment Details">
-            <DateTimeField
+            <AppointmentDateTimePicker
               label="Date & Time"
-              icon="calendar"
               value={formData.dateTime}
               onValueChange={(value) => updateField("dateTime", value)}
               error={errors.dateTime}
               required
+              existingAppointments={appointments}
             />
 
             <FormField

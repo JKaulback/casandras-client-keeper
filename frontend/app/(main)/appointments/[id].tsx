@@ -7,8 +7,8 @@ import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Alert } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { appointmentService, Appointment } from "../../../services/appointmentService";
-import { customerService, Customer } from "../../../services/customerService";
-import { dogService, Dog } from "../../../services/dogService";
+import { Customer } from "../../../services/customerService";
+import { Dog } from "../../../services/dogService";
 import { colors, spacing } from "../../../styles/theme";
 import {
   DetailHeaderCard,
@@ -93,19 +93,6 @@ export default function AppointmentDetailScreen() {
       minute: "2-digit",
       hour12: true,
     });
-  };
-
-  const getStatusColor = (status: string) => {
-    switch (status) {
-      case "confirmed":
-        return colors.success;
-      case "completed":
-        return colors.accent;
-      case "cancelled":
-        return colors.error;
-      default:
-        return colors.warning;
-    }
   };
 
   const getStatusLabel = (status: string) => {

@@ -1,9 +1,10 @@
-import { View, StyleSheet, FlatList, ActivityIndicator, RefreshControl, Text } from "react-native";
+import { View, StyleSheet, FlatList, RefreshControl } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { colors, spacing } from "../../../styles/theme";
 import { customerService, Customer } from "../../../services/customerService";
 import { SearchBar, ListHeader, ListItemCard, EmptyState } from "../../../components/ListComponents";
+import { LoadingState } from "../../../components/StateComponents";
 
 export default function CustomersIndex() {
   const router = useRouter();
@@ -80,12 +81,7 @@ export default function CustomersIndex() {
   );
 
   if (loading) {
-    return (
-      <View style={styles.loadingContainer}>
-        <ActivityIndicator size="large" color={colors.primary} />
-        <Text style={styles.loadingText}>Loading customers...</Text>
-      </View>
-    );
+    return <LoadingState message="Loading customers..." />;
   }
 
   return (
@@ -126,17 +122,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
-  },
-  loadingContainer: {
-    flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: colors.background,
-  },
-  loadingText: {
-    marginTop: spacing.base,
-    fontSize: 14,
-    color: colors.textSecondary,
   },
   listContainer: {
     padding: spacing.base,

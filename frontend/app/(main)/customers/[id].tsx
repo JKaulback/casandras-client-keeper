@@ -14,9 +14,8 @@ import {
   InfoRow,
   ActionButton,
   DetailButtonContainer,
-  LoadingState,
-  ErrorState,
 } from "../../../components/DetailComponents";
+import { LoadingState, ErrorState } from "../../../components/StateComponents";
 
 export default function CustomerDetailScreen() {
   const { id } = useLocalSearchParams();

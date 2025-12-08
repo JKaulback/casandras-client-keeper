@@ -8,8 +8,8 @@ const Dog = require('../models/Dog');
 exports.getAllAppointments = async (req, res) => {
   try {
     const appointments = await Appointment.find()
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed')
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed')
       .sort({ dateTime: 1 }); // Sort by date/time ascending
     
     res.json({

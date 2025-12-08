@@ -1,6 +1,8 @@
 const express = require('express');
 const cors = require('cors');
+const morgan = require('morgan');
 const connectDB = require('./db/connectDB');
+const logger = require('./utils/logger');
 require('dotenv').config();
 
 const app = express();
@@ -8,6 +10,14 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+
+// Morgan HTTP request logging
+// Create a stream object with a 'write' function that will be used by morgan
+app.use(morgan('combined', {
+  stream: {
+    write: (message) => logger.info(message.trim())
+  }
+}));
 
 // CORS configuration - allows localhost and deployed frontend
 const allowedOrigins = [
@@ -52,13 +62,13 @@ app.get('/', (req, res) => {
 const startServer = async () => {
   try {
     await connectDB(process.env.MONGODB_URI);
-    console.log('✅ Connected to MongoDB successfully');
+    logger.info('✅ Connected to MongoDB successfully');
     
     app.listen(PORT, () => {
-      console.log(`🚀 Server is running on http://localhost:${PORT}`);
+      logger.info(`🚀 Server is running on http://localhost:${PORT}`);
     });
   } catch (error) {
-    console.error('❌ Error connecting to MongoDB:', error.message);
+    logger.error('Failed to connect to MongoDB:', error);
     process.exit(1);
   }
 };

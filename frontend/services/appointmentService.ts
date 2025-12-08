@@ -4,6 +4,8 @@
  */
 
 import api from './api';
+import { Customer } from './customerService';
+import { Dog } from './dogService';
 
 interface RecurrenceRule {
   frequency: 'daily' | 'weekly' | 'monthly';
@@ -14,8 +16,8 @@ interface RecurrenceRule {
 
 interface Appointment {
   _id: string;
-  customerId: string;
-  dogId: string;
+  customerId: Customer;
+  dogId: Dog;
   dateTime: string;
   durationMinutes: number;
   cost: number;

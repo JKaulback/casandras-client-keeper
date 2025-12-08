@@ -1,6 +1,10 @@
-import { Stack } from "expo-router";
+import { Stack, useRouter } from "expo-router";
+import { TouchableOpacity } from "react-native";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function RootLayout() {
+  const router = useRouter();
+
   return (
     <Stack>
       <Stack.Screen 
@@ -11,6 +15,11 @@ export default function RootLayout() {
             backgroundColor: '#FAF9FC',
           },
           headerTintColor: '#2D2440',
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/settings")} style={{ marginRight: 8 }}>
+              <Ionicons name="settings-outline" size={24} color="#7C3AED" />
+            </TouchableOpacity>
+          ),
         }} 
       />
       <Stack.Screen 

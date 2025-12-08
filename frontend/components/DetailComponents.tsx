@@ -49,9 +49,11 @@ interface InfoRowProps {
   label: string;
   value: string;
   isLast?: boolean;
+  editable?: boolean;
+  onEdit?: () => void;
 }
 
-export function InfoRow({ icon, iconColor = colors.primary, label, value, isLast = false }: InfoRowProps) {
+export function InfoRow({ icon, iconColor = colors.primary, label, value, isLast = false, editable = false, onEdit }: InfoRowProps) {
   return (
     <View style={[styles.infoRow, isLast && styles.infoRowLast]}>
       <View style={[styles.infoIconContainer, { backgroundColor: `${iconColor}15` }]}>
@@ -61,6 +63,11 @@ export function InfoRow({ icon, iconColor = colors.primary, label, value, isLast
         <Text style={styles.infoLabel}>{label}</Text>
         <Text style={styles.infoValue}>{value}</Text>
       </View>
+      {editable && onEdit && (
+        <TouchableOpacity onPress={onEdit} style={styles.infoEditButton}>
+          <Ionicons name="create-outline" size={20} color={colors.primary} />
+        </TouchableOpacity>
+      )}
     </View>
   );
 }
@@ -168,6 +175,10 @@ const styles = StyleSheet.create({
   },
   infoContent: {
     flex: 1,
+  },
+  infoEditButton: {
+    padding: spacing.sm,
+    marginLeft: spacing.sm,
   },
   infoLabel: {
     fontSize: typography.fontSize.sm,

@@ -1,5 +1,5 @@
 import { Stack, useRouter } from "expo-router";
-import { TouchableOpacity } from "react-native";
+import { TouchableOpacity, View } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors } from "../../styles/theme";
 
@@ -11,6 +11,10 @@ export default function MainLayout() {
     router.replace("/");
   };
 
+  const handleSettingsPress = () => {
+    router.push("/settings");
+  };
+
   return (
     <Stack
       screenOptions={{
@@ -20,9 +24,14 @@ export default function MainLayout() {
         headerTintColor: colors.text,
         headerShadowVisible: false,
         headerRight: () => (
-          <TouchableOpacity onPress={handleHomePress} style={{ marginRight: 8 }}>
-            <Ionicons name="home" size={24} color={colors.primary} />
-          </TouchableOpacity>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 16, marginRight: 8 }}>
+            <TouchableOpacity onPress={handleSettingsPress}>
+              <Ionicons name="settings-outline" size={24} color={colors.primary} />
+            </TouchableOpacity>
+            <TouchableOpacity onPress={handleHomePress}>
+              <Ionicons name="home" size={24} color={colors.primary} />
+            </TouchableOpacity>
+          </View>
         ),
       }}
     >

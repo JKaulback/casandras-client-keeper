@@ -37,8 +37,6 @@ const api = axios.create({
   withCredentials: true, // Include cookies in all requests
 });
 
-console.log('API baseURL configured as:', getApiBaseUrl());
-
 // Response interceptor to unwrap API response format
 api.interceptors.response.use(
   (response) => response.data as any,
@@ -56,11 +54,7 @@ api.interceptors.request.use(async (config) => {
   const token = await AsyncStorage.getItem('userToken');
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
-    console.log('Authorization header set with token');
-  } else {
-    console.log('No token found in AsyncStorage');
   }
-  console.log('Making request to:', (config.baseURL || '') + (config.url || ''));
   return config;
 }, (error) => Promise.reject(error));
 

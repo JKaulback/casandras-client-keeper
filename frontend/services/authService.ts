@@ -193,7 +193,7 @@ class AuthService {
   async verifyToken(): Promise<VerifyTokenResponse> {
     try {
       // axios interceptor unwraps response.data, so this is already VerifyTokenResponse
-      const data: any = await api.post('/api/auth/verify');
+      const data: any = await api.post('/auth/verify');
       return data as VerifyTokenResponse;
     } catch (error: any) {
       // Don't log 401 errors (unauthenticated) - this is expected when not logged in
@@ -208,7 +208,7 @@ class AuthService {
     await AsyncStorage.removeItem(this.tokenKey);
     // Call backend to clear cookie
     try {
-      await api.post('/api/auth/logout');
+      await api.post('/auth/logout');
     } catch (error) {
       console.error('Logout error:', error);
     }

@@ -32,14 +32,18 @@ const api = axios.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true, // Include cookies in all requests
 });
 
 // Response interceptor to unwrap API response format
 api.interceptors.response.use(
-  (response) => response.data,
+  (response) => response.data as any,
   (error) => {
-    console.error('API Error:', error.response?.data || error.message);
-    throw error;
+    // Don't log 401 errors - these are expected when not authenticated
+    if (error?.response?.status !== 401) {
+      console.error('API Error:', error.response?.data || error.message);
+    }
+    return Promise.reject(error);
   }
 );
 

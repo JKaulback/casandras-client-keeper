@@ -8,6 +8,18 @@ export default function RootLayout() {
   return (
     <Stack>
       <Stack.Screen 
+        name="(auth)/sign-in" 
+        options={{ 
+          headerShown: false,
+        }} 
+      />
+      <Stack.Screen 
+        name="(auth)/callback" 
+        options={{ 
+          headerShown: false,
+        }} 
+      />
+      <Stack.Screen 
         name="index" 
         options={{ 
           title: "Scissors and Sudz",
@@ -20,6 +32,16 @@ export default function RootLayout() {
               <Ionicons name="settings-outline" size={24} color="#7C3AED" />
             </TouchableOpacity>
           ),
+        }} 
+      />
+      <Stack.Screen 
+        name="settings" 
+        options={{ 
+          title: "Settings",
+          headerStyle: {
+            backgroundColor: '#FAF9FC',
+          },
+          headerTintColor: '#2D2440',
         }} 
       />
       <Stack.Screen 

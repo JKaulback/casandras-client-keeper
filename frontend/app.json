@@ -1,15 +1,16 @@
 {
   "expo": {
-    "name": "frontend",
-    "slug": "frontend",
+    "name": "Casandra's Client Keeper",
+    "slug": "casandras-client-keeper",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/images/icon.png",
-    "scheme": "frontend",
+    "scheme": "casandras",
     "userInterfaceStyle": "automatic",
     "newArchEnabled": true,
-    "ios": {
-      "supportsTablet": true
+    "extra": {
+      "apiUrl": "http://localhost:3000",
+      "redirectUri": "casandras://auth/callback"
     },
     "android": {
       "package": "com.casandras.clientkeeper",
@@ -20,7 +21,25 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "intentFilters": [
+        {
+          "action": "VIEW",
+          "autoVerify": true,
+          "data": [
+            {
+              "scheme": "casandras",
+              "host": "auth"
+            }
+          ],
+          "category": ["BROWSABLE", "DEFAULT"]
+        }
+      ]
+    },
+    "ios": {
+      "supportsTablet": true,
+      "bundleIdentifier": "com.casandras.clientkeeper",
+      "associatedDomains": ["applinks:casandras.app"]
     },
     "web": {
       "output": "static",

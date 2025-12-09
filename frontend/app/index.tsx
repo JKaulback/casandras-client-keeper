@@ -1,11 +1,14 @@
-import { Text, View, StyleSheet, ScrollView } from "react-native";
+import { Text, View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { colors, spacing, typography } from "../styles/theme";
 import { StatCard, NavCard, QuickActionButton } from "../components/DashboardComponents";
+import authService from "../services/authService";
 
 export default function Dashboard() {
   const router = useRouter();
+  const [loading, setLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   
   // State for statistics (you'll fetch these from your API later)
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -16,10 +19,39 @@ export default function Dashboard() {
     todayAppointments: 0,
   });
 
-  // TODO: Fetch statistics from your backend
+  // Check authentication on mount
+  const checkAuth = useCallback(async () => {
+    try {
+      const user = await authService.getCurrentUser();
+      if (user) {
+        setIsAuthenticated(true);
+        // TODO: Fetch statistics from your backend
+      } else {
+        router.replace('/(auth)/sign-in');
+      }
+    } catch (error) {
+      console.error('Auth check failed:', error);
+      router.replace('/(auth)/sign-in');
+    } finally {
+      setLoading(false);
+    }
+  }, [router]);
+
   useEffect(() => {
-    // Example: fetchDashboardStats();
-  }, []);
+    checkAuth();
+  }, [checkAuth]);
+
+  if (loading) {
+    return (
+      <View style={[styles.container, styles.centered]}>
+        <ActivityIndicator size="large" color={colors.primary} />
+      </View>
+    );
+  }
+
+  if (!isAuthenticated) {
+    return null;
+  }
 
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
@@ -123,6 +155,10 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  centered: {
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   contentContainer: {
     padding: spacing.lg,

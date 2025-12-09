@@ -2,6 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
+const cookieParser = require('cookie-parser');
 const connectDB = require('./db/connectDB');
 const logger = require('./utils/logger');
 require('dotenv').config();
@@ -11,6 +12,7 @@ const PORT = process.env.PORT || 3000;
 
 // Middleware
 app.use(express.json());
+app.use(cookieParser());
 
 // Morgan HTTP request logging
 // Create a stream object with a 'write' function that will be used by morgan
@@ -53,7 +55,7 @@ const customerRoutes = require('./routes/customerRoutes');
 const dogRoutes = require('./routes/dogRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
 
-app.use('/auth', authRoutes);
+app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/dogs', dogRoutes);

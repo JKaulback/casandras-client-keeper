@@ -5,6 +5,7 @@
 
 import axios from 'axios';
 import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Get API URL from environment variable
 const ENV_API_URL = process.env.EXPO_PUBLIC_API_URL;
@@ -46,5 +47,14 @@ api.interceptors.response.use(
     return Promise.reject(error);
   }
 );
+
+// Request interceptor for authorization header using AsyncStorage
+api.interceptors.request.use(async (config) => {
+  const token = await AsyncStorage.getItem('userToken');
+  if (token) {
+    config.headers.Authorization = `Bearer ${token}`;
+  }
+  return config;
+}, (error) => Promise.reject(error));
 
 export default api;

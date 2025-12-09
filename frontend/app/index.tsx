@@ -1,9 +1,11 @@
 import { Text, View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useEffect, useCallback } from "react";
+import * as Linking from 'expo-linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import authService from "../services/authService";
 import { colors, spacing, typography } from "../styles/theme";
 import { StatCard, NavCard, QuickActionButton } from "../components/DashboardComponents";
-import authService from "../services/authService";
 
 export default function Dashboard() {
   const router = useRouter();

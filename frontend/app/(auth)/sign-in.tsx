@@ -1,7 +1,9 @@
 import { View, Text, TouchableOpacity, StyleSheet, ActivityIndicator } from 'react-native';
 import { useRouter } from 'expo-router';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Ionicons } from '@expo/vector-icons';
+import * as Linking from 'expo-linking';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import authService from '../../services/authService';
 import { colors, spacing, typography } from '../../styles/theme';
 
@@ -9,6 +11,43 @@ export default function SignIn() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
+
+  useEffect(() => {
+    // Listen for deep links while on sign-in page
+    const handleDeepLink = async (event: { url: string }) => {
+      console.log('=== Deep link received on sign-in page ===');
+      console.log('URL:', event.url);
+      
+      const data = Linking.parse(event.url);
+      console.log('Parsed data:', JSON.stringify(data));
+      
+      const tokenParam = data.queryParams?.token;
+      const token = Array.isArray(tokenParam) ? tokenParam[0] : tokenParam;
+      
+      if (token) {
+        console.log('Token found in deep link, storing...');
+        console.log('Token:', token.substring(0, 20) + '...');
+        await AsyncStorage.setItem('userToken', token);
+        console.log('Token stored successfully in AsyncStorage');
+      } else {
+        console.log('No token found in deep link');
+      }
+    };
+
+    const subscription = Linking.addEventListener('url', handleDeepLink);
+
+    // Also check if app was opened via deep link
+    Linking.getInitialURL().then(url => {
+      if (url) {
+        console.log('Initial URL detected:', url);
+        handleDeepLink({ url });
+      }
+    });
+
+    return () => {
+      subscription.remove();
+    };
+  }, []);
 
   const handleGoogleSignIn = async () => {
     setLoading(true);

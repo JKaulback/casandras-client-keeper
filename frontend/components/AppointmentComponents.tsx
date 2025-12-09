@@ -172,6 +172,7 @@ interface DateNavigatorProps {
   appointmentCount: number;
   onPreviousDay: () => void;
   onNextDay: () => void;
+  onDatePress?: () => void;
 }
 
 export function DateNavigator({
@@ -179,6 +180,7 @@ export function DateNavigator({
   appointmentCount,
   onPreviousDay,
   onNextDay,
+  onDatePress,
 }: DateNavigatorProps) {
   const formatDateHeader = (date: Date) => {
     const today = new Date();
@@ -217,12 +219,16 @@ export function DateNavigator({
         <Ionicons name="chevron-back" size={24} color={colors.primary} />
       </TouchableOpacity>
 
-      <View style={styles.dateInfo}>
+      <TouchableOpacity 
+        onPress={onDatePress} 
+        style={styles.dateInfo}
+        disabled={!onDatePress}
+      >
         <Text style={styles.dateText}>{formatDateHeader(selectedDate)}</Text>
         <Text style={styles.appointmentCount}>
           {appointmentCount} {appointmentCount === 1 ? "appointment" : "appointments"}
         </Text>
-      </View>
+      </TouchableOpacity>
 
       <TouchableOpacity onPress={onNextDay} style={styles.navButton}>
         <Ionicons name="chevron-forward" size={24} color={colors.primary} />

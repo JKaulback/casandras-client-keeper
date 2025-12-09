@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 import { appointmentService, Appointment } from "../../../services/appointmentService";
 import { colors, spacing } from "../../../styles/theme";
 import { LoadingState } from "../../../components/StateComponents";
+import { MonthCalendarModal } from "../../../components/MonthCalendarModal";
 import {
   WeeklyView,
   DateNavigator,
@@ -22,6 +23,7 @@ export default function AppointmentsScreen() {
   const [selectedDate, setSelectedDate] = useState(new Date());
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showMonthModal, setShowMonthModal] = useState(false);
 
   const fetchAppointments = async () => {
     try {
@@ -63,6 +65,18 @@ export default function AppointmentsScreen() {
   };
 
   const handleDayPress = (date: Date) => {
+    setSelectedDate(date);
+  };
+
+  const handleOpenMonthModal = () => {
+    setShowMonthModal(true);
+  };
+
+  const handleCloseMonthModal = () => {
+    setShowMonthModal(false);
+  };
+
+  const handleMonthDateSelect = (date: Date) => {
     setSelectedDate(date);
   };
 
@@ -118,6 +132,7 @@ export default function AppointmentsScreen() {
         appointmentCount={dayAppointments.length}
         onPreviousDay={handlePreviousDay}
         onNextDay={handleNextDay}
+        onDatePress={handleOpenMonthModal}
       />
 
       <CalendarActions onToday={handleToday} onAddAppointment={handleAddPress} />
@@ -138,6 +153,14 @@ export default function AppointmentsScreen() {
         ))}
         <View style={styles.bottomSpacer} />
       </ScrollView>
+
+      <MonthCalendarModal
+        visible={showMonthModal}
+        onClose={handleCloseMonthModal}
+        appointments={appointments}
+        selectedDate={selectedDate}
+        onDateSelect={handleMonthDateSelect}
+      />
     </View>
   );
 }

@@ -4,10 +4,167 @@
  */
 
 import React from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
+import { View, Text, StyleSheet, TouchableOpacity, ScrollView } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { colors, spacing, typography } from "../styles/theme";
 import { Appointment } from "../services/appointmentService";
+
+// Weekly View Component
+interface WeeklyViewProps {
+  appointments: Appointment[];
+  selectedDate: Date;
+  onDayPress: (date: Date) => void;
+}
+
+export function WeeklyView({ appointments, selectedDate, onDayPress }: WeeklyViewProps) {
+  // Get the start of the week (Sunday)
+  const getWeekStart = (date: Date) => {
+    const d = new Date(date);
+    const day = d.getDay();
+    const diff = d.getDate() - day;
+    return new Date(d.setDate(diff));
+  };
+
+  // Generate array of 7 days starting from Sunday
+  const weekStart = getWeekStart(selectedDate);
+  const weekDays = Array.from({ length: 7 }, (_, i) => {
+    const day = new Date(weekStart);
+    day.setDate(weekStart.getDate() + i);
+    return day;
+  });
+
+  // Count appointments for a specific day
+  const getAppointmentCount = (date: Date) => {
+    return appointments.filter((apt) => {
+      const aptDate = new Date(apt.dateTime);
+      return (
+        aptDate.getFullYear() === date.getFullYear() &&
+        aptDate.getMonth() === date.getMonth() &&
+        aptDate.getDate() === date.getDate()
+      );
+    }).length;
+  };
+
+  const isToday = (date: Date) => {
+    const today = new Date();
+    return (
+      date.getFullYear() === today.getFullYear() &&
+      date.getMonth() === today.getMonth() &&
+      date.getDate() === today.getDate()
+    );
+  };
+
+  const isSelected = (date: Date) => {
+    return (
+      date.getFullYear() === selectedDate.getFullYear() &&
+      date.getMonth() === selectedDate.getMonth() &&
+      date.getDate() === selectedDate.getDate()
+    );
+  };
+
+  return (
+    <View style={weeklyStyles.container}>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerStyle={weeklyStyles.scrollContent}>
+        {weekDays.map((day, index) => {
+          const count = getAppointmentCount(day);
+          const selected = isSelected(day);
+          const today = isToday(day);
+
+          return (
+            <TouchableOpacity
+              key={index}
+              style={[
+                weeklyStyles.dayCard,
+                selected && weeklyStyles.dayCardSelected,
+                today && !selected && weeklyStyles.dayCardToday,
+              ]}
+              onPress={() => onDayPress(day)}
+            >
+              <Text style={[weeklyStyles.dayName, selected && weeklyStyles.dayNameSelected]}>
+                {day.toLocaleDateString("en-US", { weekday: "short" })}
+              </Text>
+              <Text style={[weeklyStyles.dayNumber, selected && weeklyStyles.dayNumberSelected]}>
+                {day.getDate()}
+              </Text>
+              <View style={[weeklyStyles.countBadge, count === 0 && weeklyStyles.countBadgeEmpty]}>
+                <Text style={[weeklyStyles.countText, count === 0 && weeklyStyles.countTextEmpty]}>
+                  {count}
+                </Text>
+              </View>
+            </TouchableOpacity>
+          );
+        })}
+      </ScrollView>
+    </View>
+  );
+}
+
+const weeklyStyles = StyleSheet.create({
+  container: {
+    backgroundColor: colors.surface,
+    paddingVertical: spacing.md,
+    borderBottomWidth: 1,
+    borderBottomColor: colors.border,
+  },
+  scrollContent: {
+    paddingHorizontal: spacing.sm,
+    gap: spacing.sm,
+  },
+  dayCard: {
+    backgroundColor: colors.background,
+    borderRadius: 12,
+    padding: spacing.md,
+    alignItems: "center",
+    minWidth: 70,
+    borderWidth: 2,
+    borderColor: colors.border,
+  },
+  dayCardSelected: {
+    backgroundColor: colors.primary,
+    borderColor: colors.primary,
+  },
+  dayCardToday: {
+    borderColor: colors.primary,
+    borderWidth: 2,
+  },
+  dayName: {
+    fontSize: 12,
+    color: colors.textSecondary,
+    fontWeight: "600",
+    marginBottom: spacing.xs,
+  },
+  dayNameSelected: {
+    color: colors.surface,
+  },
+  dayNumber: {
+    fontSize: 20,
+    fontWeight: "bold",
+    color: colors.text,
+    marginBottom: spacing.sm,
+  },
+  dayNumberSelected: {
+    color: colors.surface,
+  },
+  countBadge: {
+    backgroundColor: colors.primary,
+    borderRadius: 12,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: 4,
+    minWidth: 32,
+    alignItems: "center",
+  },
+  countBadgeEmpty: {
+    backgroundColor: colors.border,
+  },
+  countText: {
+    color: colors.surface,
+    fontSize: 12,
+    fontWeight: "bold",
+  },
+  countTextEmpty: {
+    color: colors.textSecondary,
+  },
+});
 
 // Date Navigator Component
 interface DateNavigatorProps {

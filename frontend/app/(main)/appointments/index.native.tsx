@@ -10,6 +10,7 @@ import { appointmentService, Appointment } from "../../../services/appointmentSe
 import { colors, spacing } from "../../../styles/theme";
 import { LoadingState } from "../../../components/StateComponents";
 import {
+  WeeklyView,
   DateNavigator,
   CalendarActions,
   TimeSlot,
@@ -61,6 +62,10 @@ export default function AppointmentsScreen() {
     setSelectedDate(new Date());
   };
 
+  const handleDayPress = (date: Date) => {
+    setSelectedDate(date);
+  };
+
   const handleAddPress = () => {
     router.push("/appointments/new");
   };
@@ -102,6 +107,12 @@ export default function AppointmentsScreen() {
 
   return (
     <View style={styles.container}>
+      <WeeklyView
+        appointments={appointments}
+        selectedDate={selectedDate}
+        onDayPress={handleDayPress}
+      />
+
       <DateNavigator
         selectedDate={selectedDate}
         appointmentCount={dayAppointments.length}

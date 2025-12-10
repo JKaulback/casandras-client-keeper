@@ -221,10 +221,16 @@ export function DateNavigator({
 
       <TouchableOpacity 
         onPress={onDatePress} 
-        style={styles.dateInfo}
+        style={[styles.dateInfo, onDatePress && styles.dateInfoTappable]}
         disabled={!onDatePress}
+        activeOpacity={0.7}
       >
-        <Text style={styles.dateText}>{formatDateHeader(selectedDate)}</Text>
+        <View style={styles.dateTextContainer}>
+          <Text style={styles.dateText}>{formatDateHeader(selectedDate)}</Text>
+          {onDatePress && (
+            <Ionicons name="calendar-outline" size={16} color={colors.primary} style={styles.calendarIcon} />
+          )}
+        </View>
         <Text style={styles.appointmentCount}>
           {appointmentCount} {appointmentCount === 1 ? "appointment" : "appointments"}
         </Text>
@@ -354,6 +360,20 @@ const styles = StyleSheet.create({
   dateInfo: {
     flex: 1,
     alignItems: "center",
+  },
+  dateInfoTappable: {
+    backgroundColor: colors.background,
+    borderRadius: 8,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
+  dateTextContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+  },
+  calendarIcon: {
+    marginLeft: spacing.xs,
   },
   dateText: {
     fontSize: typography.fontSize.lg,

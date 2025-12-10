@@ -137,9 +137,8 @@ export default function NewAppointmentScreen() {
       };
 
       await appointmentService.create(appointmentData as any);
-      Alert.alert("Success", "Appointment created successfully", [
-        { text: "OK", onPress: () => router.back() },
-      ]);
+      
+      router.replace('/appointments');
     } catch (error) {
       console.error("Error creating appointment:", error);
       Alert.alert("Error", "Failed to create appointment");

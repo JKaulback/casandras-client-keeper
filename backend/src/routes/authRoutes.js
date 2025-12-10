@@ -70,7 +70,7 @@ router.get('/google/callback',
         res.cookie('token', token, {
             httpOnly: true, // Prevents client-side JS access
             secure: process.env.NODE_ENV === 'production', // HTTPS in production
-            sameSite: 'lax',
+            sameSite: process.env.NODE_ENV === 'production' ? 'none' : 'lax', // 'none' required for cross-origin in production
             maxAge: 7 * 24 * 60 * 60 * 1000 // 7 days to match JWT expiry
         });
         

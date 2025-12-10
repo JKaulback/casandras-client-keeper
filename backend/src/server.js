@@ -61,12 +61,14 @@ const userRoutes = require('./routes/userRoutes');
 const customerRoutes = require('./routes/customerRoutes');
 const dogRoutes = require('./routes/dogRoutes');
 const appointmentRoutes = require('./routes/appointmentRoutes');
+const statsRoutes = require('./routes/statsRoutes');
 
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/dogs', dogRoutes);
 app.use('/api/appointments', appointmentRoutes);
+app.use('/api/stats', statsRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {

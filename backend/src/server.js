@@ -5,7 +5,12 @@ const passport = require('passport');
 const cookieParser = require('cookie-parser');
 const connectDB = require('./db/connectDB');
 const logger = require('./utils/logger');
+const validateEnv = require('./utils/validateEnv');
+const errorHandler = require('./middleware/errorHandler');
 require('dotenv').config();
+
+// Validate environment variables before starting
+validateEnv();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -66,20 +71,53 @@ app.get('/', (req, res) => {
   res.json({ message: 'Welcome to Casandra\'s Client Keeper API' });
 });
 
+// Health check endpoint
+app.get('/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date().toISOString() });
+});
+
+// Global error handler (must be last)
+app.use(errorHandler);
+
 // Database connection and server startup
 const startServer = async () => {
   try {
     await connectDB(process.env.MONGODB_URI);
     logger.info('✅ Connected to MongoDB successfully');
     
-    app.listen(PORT, () => {
+    const server = app.listen(PORT, () => {
       logger.info(`🚀 Server is running on http://localhost:${PORT}`);
     });
+
+    // Graceful shutdown
+    const gracefulShutdown = async (signal) => {
+      logger.info(`${signal} received, shutting down gracefully...`);
+      server.close(() => {
+        logger.info('HTTP server closed');
+        process.exit(0);
+      });
+
+      // Force shutdown after 10 seconds
+      setTimeout(() => {
+        logger.error('Forced shutdown after timeout');
+        process.exit(1);
+      }, 10000);
+    };
+
+    process.on('SIGTERM', () => gracefulShutdown('SIGTERM'));
+    process.on('SIGINT', () => gracefulShutdown('SIGINT'));
+
   } catch (error) {
     logger.error('Failed to connect to MongoDB:', error);
     process.exit(1);
   }
 };
+
+// Handle unhandled rejections
+process.on('unhandledRejection', (reason, promise) => {
+  logger.error('Unhandled Rejection at:', promise, 'reason:', reason);
+  process.exit(1);
+});
 
 startServer();
 

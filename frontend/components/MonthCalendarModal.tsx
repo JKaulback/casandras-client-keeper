@@ -3,7 +3,7 @@
  * Shows a full month view with appointment counts
  */
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -32,6 +32,13 @@ export function MonthCalendarModal({
   onDateSelect,
 }: MonthCalendarModalProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date(selectedDate));
+
+  // Reset currentMonth to selectedDate when modal opens
+  useEffect(() => {
+    if (visible) {
+      setCurrentMonth(new Date(selectedDate));
+    }
+  }, [visible, selectedDate]);
 
   // Get appointment count for a specific date
   const getAppointmentCount = (date: Date) => {

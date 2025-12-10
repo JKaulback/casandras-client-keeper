@@ -9,6 +9,7 @@ import { useRouter } from "expo-router";
 import { appointmentService, Appointment } from "../../../services/appointmentService";
 import { colors, spacing, typography } from "../../../styles/theme";
 import { LoadingState } from "../../../components/StateComponents";
+import { MonthCalendarModal } from "../../../components/MonthCalendarModal";
 import { Ionicons } from "@expo/vector-icons";
 import { AppointmentCard } from "../../../components/AppointmentComponents";
 
@@ -18,6 +19,7 @@ export default function AppointmentsScreenWeb() {
   const [selectedWeekStart, setSelectedWeekStart] = useState(getWeekStart(new Date()));
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
+  const [showMonthModal, setShowMonthModal] = useState(false);
 
   function getWeekStart(date: Date): Date {
     const d = new Date(date);
@@ -63,6 +65,18 @@ export default function AppointmentsScreenWeb() {
 
   const handleThisWeek = () => {
     setSelectedWeekStart(getWeekStart(new Date()));
+  };
+
+  const handleOpenMonthModal = () => {
+    setShowMonthModal(true);
+  };
+
+  const handleCloseMonthModal = () => {
+    setShowMonthModal(false);
+  };
+
+  const handleMonthDateSelect = (date: Date) => {
+    setSelectedWeekStart(getWeekStart(date));
   };
 
   const handleAddPress = () => {
@@ -144,9 +158,14 @@ export default function AppointmentsScreenWeb() {
             <Ionicons name="chevron-back" size={24} color={colors.primary} />
           </TouchableOpacity>
           
-          <View style={styles.weekInfo}>
+          <TouchableOpacity 
+            onPress={handleOpenMonthModal}
+            style={styles.weekInfo}
+            activeOpacity={0.7}
+          >
             <Text style={styles.weekText}>{formatWeekRange()}</Text>
-          </View>
+            <Ionicons name="calendar-outline" size={16} color={colors.primary} style={styles.calendarIcon} />
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={handleNextWeek} style={styles.navButton}>
             <Ionicons name="chevron-forward" size={24} color={colors.primary} />
@@ -215,6 +234,13 @@ export default function AppointmentsScreenWeb() {
         })}
         <View style={styles.bottomSpacer} />
       </ScrollView>
+
+      <MonthCalendarModal
+        visible={showMonthModal}
+        onClose={handleCloseMonthModal}
+        appointments={appointments}
+        selectedDate={selectedWeekStart}
+        onDateSelect={handleMonthDateSelect}/>
     </View>
   );
 }
@@ -246,6 +272,16 @@ const styles = StyleSheet.create({
   weekInfo: {
     minWidth: 300,
     alignItems: "center",
+    flexDirection: "row",
+    justifyContent: "center",
+    gap: spacing.sm,
+    backgroundColor: colors.background,
+    borderRadius: 8,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+  },
+  calendarIcon: {
+    marginLeft: spacing.xs,
   },
   weekText: {
     fontSize: typography.fontSize.xl,

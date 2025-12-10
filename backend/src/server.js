@@ -1,3 +1,6 @@
+// Load environment variables from .env file (for local development)
+require('dotenv').config();
+
 const express = require('express');
 const cors = require('cors');
 const morgan = require('morgan');
@@ -7,7 +10,6 @@ const connectDB = require('./db/connectDB');
 const logger = require('./utils/logger');
 const validateEnv = require('./utils/validateEnv');
 const errorHandler = require('./middleware/errorHandler');
-require('dotenv').config();
 
 // Validate environment variables before starting
 validateEnv();

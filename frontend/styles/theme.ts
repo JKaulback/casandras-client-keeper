@@ -133,3 +133,17 @@ export const layout = {
   sectionSpacing: spacing.xxl,
   itemSpacing: spacing.md,
 };
+
+// Responsive Breakpoints
+export const breakpoints = {
+  mobile: 0,
+  tablet: 768,
+  desktop: 1024,
+  wide: 1280,
+};
+
+// Responsive utility to check if screen is mobile-sized
+export const isMobileWidth = (width: number) => width < breakpoints.tablet;
+export const isTabletWidth = (width: number) => width >= breakpoints.tablet && width < breakpoints.desktop;
+export const isDesktopWidth = (width: number) => width >= breakpoints.desktop;
+

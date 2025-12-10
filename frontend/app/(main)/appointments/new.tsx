@@ -11,6 +11,7 @@ import {
   Alert,
   KeyboardAvoidingView,
   Platform,
+  useWindowDimensions,
 } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { appointmentService } from "../../../services/appointmentService";
@@ -48,6 +49,8 @@ interface FormErrors {
 export default function NewAppointmentScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
+  const { width } = useWindowDimensions();
+  const isDesktop = Platform.OS === 'web' && width >= 768;
   const [formData, setFormData] = useState<FormData>({
     customerId: (params.customerId as string) || "",
     dogId: (params.dogId as string) || "",
@@ -154,6 +157,20 @@ export default function NewAppointmentScreen() {
     }
   };
 
+  const handleCostChange = (value: string) => {
+    // Remove non-numeric characters except decimal point
+    const cleaned = value.replace(/[^0-9.]/g, '');
+    
+    // Ensure only one decimal point
+    const parts = cleaned.split('.');
+    let formatted = parts[0];
+    if (parts.length > 1) {
+      formatted += '.' + parts.slice(1).join('').substring(0, 2);
+    }
+    
+    updateField("cost", formatted);
+  };
+
   const getCustomerDogs = () => {
     if (!formData.customerId) return dogs;
     return dogs.filter((dog) => {
@@ -173,6 +190,17 @@ export default function NewAppointmentScreen() {
     label: dog.name,
     value: dog._id,
   }));
+
+  const durationOptions = [
+    { label: "15 minutes", value: "15" },
+    { label: "30 minutes", value: "30" },
+    { label: "45 minutes", value: "45" },
+    { label: "60 minutes (1 hour)", value: "60" },
+    { label: "75 minutes", value: "75" },
+    { label: "90 minutes (1.5 hours)", value: "90" },
+    { label: "105 minutes", value: "105" },
+    { label: "120 minutes (2 hours)", value: "120" },
+  ];
 
   const statusOptions = [
     { label: "Pending", value: "pending" },
@@ -201,9 +229,11 @@ export default function NewAppointmentScreen() {
           icon="calendar"
         />
 
-        <View style={styles.form}>
+        <View style={[styles.form, isDesktop && styles.formDesktop]}>
           <FormSection title="Customer & Pet">
-            <SelectField
+            <View style={isDesktop ? styles.rowDesktop : undefined}>
+              <View style={isDesktop ? styles.fieldHalf : undefined}>
+                <SelectField
               label="Customer"
               icon="person"
               value={formData.customerId}
@@ -216,8 +246,10 @@ export default function NewAppointmentScreen() {
               error={errors.customerId}
               required
             />
+              </View>
 
-            <SelectField
+              <View style={isDesktop ? styles.fieldHalf : undefined}>
+                <SelectField
               label="Dog"
               icon="paw"
               value={formData.dogId}
@@ -228,6 +260,8 @@ export default function NewAppointmentScreen() {
               required
               disabled={!formData.customerId}
             />
+              </View>
+            </View>
           </FormSection>
 
           <FormSection title="Appointment Details">
@@ -240,43 +274,54 @@ export default function NewAppointmentScreen() {
               existingAppointments={appointments}
             />
 
-            <FormField
-              label="Duration (minutes)"
-              value={formData.durationMinutes}
-              onChangeText={(value) => updateField("durationMinutes", value)}
-              placeholder="60"
-              keyboardType="numeric"
-              icon="hourglass"
-              error={errors.durationMinutes}
-              required
-            />
+            <View style={isDesktop ? styles.rowDesktop : undefined}>
+              <View style={isDesktop ? styles.fieldHalf : undefined}>
+                <SelectField
+                  label="Duration"
+                  icon="hourglass"
+                  value={formData.durationMinutes}
+                  onValueChange={(value) => updateField("durationMinutes", value)}
+                  options={durationOptions}
+                  error={errors.durationMinutes}
+                  required
+                />
+              </View>
 
-            <FormField
-              label="Cost ($)"
-              value={formData.cost}
-              onChangeText={(value) => updateField("cost", value)}
-              placeholder="50.00"
+              <View style={isDesktop ? styles.fieldHalf : undefined}>
+                <FormField
+                  label="Cost ($)"
+                  value={formData.cost}
+                  onChangeText={handleCostChange}
+                  placeholder="50.00"
               keyboardType="decimal-pad"
               icon="pricetag"
               error={errors.cost}
               required
             />
+              </View>
+            </View>
 
-            <SelectField
-              label="Status"
+            <View style={isDesktop ? styles.rowDesktop : undefined}>
+              <View style={isDesktop ? styles.fieldHalf : undefined}>
+                <SelectField
+                  label="Status"
               icon="checkmark-circle"
               value={formData.status}
               onValueChange={(value) => updateField("status", value as any)}
               options={statusOptions}
             />
+              </View>
 
-            <SelectField
-              label="Payment Status"
+              <View style={isDesktop ? styles.fieldHalf : undefined}>
+                <SelectField
+                  label="Payment Status"
               icon="card"
               value={formData.paymentStatus}
               onValueChange={(value) => updateField("paymentStatus", value as any)}
               options={paymentStatusOptions}
             />
+              </View>
+            </View>
 
             <FormField
               label="Notes"
@@ -311,5 +356,19 @@ const styles = StyleSheet.create({
   },
   form: {
     padding: spacing.lg,
+  },
+  formDesktop: {
+    maxWidth: 900,
+    marginHorizontal: "auto" as any,
+    width: "100%",
+  },
+  rowDesktop: {
+    flexDirection: "row",
+    gap: spacing.lg,
+    marginHorizontal: -spacing.sm,
+  },
+  fieldHalf: {
+    flex: 1,
+    marginHorizontal: spacing.sm,
   },
 });

@@ -4,6 +4,7 @@ import { useState, useEffect, useCallback } from "react";
 import * as Linking from 'expo-linking';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import authService from "../services/authService";
+import { statsService } from "../services/statsService";
 import { colors, spacing, typography } from "../styles/theme";
 import { StatCard, NavCard, QuickActionButton } from "../components/DashboardComponents";
 
@@ -12,8 +13,7 @@ export default function Dashboard() {
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
-  // State for statistics (you'll fetch these from your API later)
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  // State for statistics
   const [stats, setStats] = useState({
     totalCustomers: 0,
     totalDogs: 0,
@@ -21,13 +21,23 @@ export default function Dashboard() {
     todayAppointments: 0,
   });
 
+  // Fetch statistics from backend
+  const fetchStats = useCallback(async () => {
+    try {
+      const dashboardStats = await statsService.getDashboardStats();
+      setStats(dashboardStats);
+    } catch (error) {
+      console.error('Failed to fetch stats:', error);
+    }
+  }, []);
+
   // Check authentication on mount
   const checkAuth = useCallback(async () => {
     try {
       const user = await authService.getCurrentUser();
       if (user) {
         setIsAuthenticated(true);
-        // TODO: Fetch statistics from your backend
+        await fetchStats();
       } else {
         router.replace('/(auth)/sign-in');
       }
@@ -37,7 +47,7 @@ export default function Dashboard() {
     } finally {
       setLoading(false);
     }
-  }, [router]);
+  }, [router, fetchStats]);
 
   useEffect(() => {
     checkAuth();

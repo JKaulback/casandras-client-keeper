@@ -3,7 +3,7 @@
     "_id": {"$oid": "674d1234567890abcdef0001"},
     "customerId": {"$oid": "674b1234567890abcdef0001"},
     "dogId": {"$oid": "674c1234567890abcdef0001"},
-    "dateTime": {"$date": "2024-12-16T09:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-12T19:00:00.000Z"},
     "durationMinutes": 90,
     "cost": 75,
     "notes": "Full grooming with nail trim",
@@ -11,14 +11,14 @@
     "isRecurring": false,
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-01T10:00:00.000Z"},
-    "updatedAt": {"$date": "2024-12-01T10:00:00.000Z"}
+    "createdAt": {"$date": "2025-12-01T10:00:00.000Z"},
+    "updatedAt": {"$date": "2025-12-01T10:00:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0002"},
     "customerId": {"$oid": "674b1234567890abcdef0001"},
     "dogId": {"$oid": "674c1234567890abcdef0002"},
-    "dateTime": {"$date": "2024-12-16T11:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-13T20:30:00.000Z"},
     "durationMinutes": 90,
     "cost": 70,
     "notes": "Bath and brush, nail trim",
@@ -26,14 +26,14 @@
     "isRecurring": false,
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-01T10:05:00.000Z"},
-    "updatedAt": {"$date": "2024-12-01T10:05:00.000Z"}
+    "createdAt": {"$date": "2025-12-01T10:05:00.000Z"},
+    "updatedAt": {"$date": "2025-12-01T10:05:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0003"},
     "customerId": {"$oid": "674b1234567890abcdef0002"},
     "dogId": {"$oid": "674c1234567890abcdef0003"},
-    "dateTime": {"$date": "2024-12-17T14:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-13T19:00:00.000Z"},
     "durationMinutes": 60,
     "cost": 55,
     "notes": "Basic grooming, careful with nails",
@@ -43,18 +43,18 @@
       "frequency": "monthly",
       "interval": 1,
       "byDay": [],
-      "endDate": {"$date": "2025-06-17T00:00:00.000Z"}
+      "endDate": {"$date": "2026-06-13T00:00:00.000Z"}
     },
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-02T11:30:00.000Z"},
-    "updatedAt": {"$date": "2024-12-02T11:30:00.000Z"}
+    "createdAt": {"$date": "2025-11-02T11:30:00.000Z"},
+    "updatedAt": {"$date": "2025-11-02T11:30:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0004"},
     "customerId": {"$oid": "674b1234567890abcdef0003"},
     "dogId": {"$oid": "674c1234567890abcdef0004"},
-    "dateTime": {"$date": "2024-12-18T10:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-15T10:00:00.000Z"},
     "durationMinutes": 60,
     "cost": 60,
     "notes": "Bath only, watch breathing",
@@ -62,14 +62,14 @@
     "isRecurring": false,
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-03T09:00:00.000Z"},
-    "updatedAt": {"$date": "2024-12-03T09:00:00.000Z"}
+    "createdAt": {"$date": "2025-12-03T09:00:00.000Z"},
+    "updatedAt": {"$date": "2025-12-03T09:00:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0005"},
     "customerId": {"$oid": "674b1234567890abcdef0004"},
     "dogId": {"$oid": "674c1234567890abcdef0005"},
-    "dateTime": {"$date": "2024-12-19T13:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-16T18:00:00.000Z"},
     "durationMinutes": 120,
     "cost": 85,
     "notes": "Teddy bear cut, full groom",
@@ -79,18 +79,18 @@
       "frequency": "monthly",
       "interval": 1,
       "byDay": [],
-      "endDate": {"$date": "2025-12-19T00:00:00.000Z"}
+      "endDate": {"$date": "2026-12-16T00:00:00.000Z"}
     },
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-04T14:00:00.000Z"},
-    "updatedAt": {"$date": "2024-12-04T14:00:00.000Z"}
+    "createdAt": {"$date": "2025-11-04T14:00:00.000Z"},
+    "updatedAt": {"$date": "2025-11-04T14:00:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0006"},
     "customerId": {"$oid": "674b1234567890abcdef0004"},
     "dogId": {"$oid": "674c1234567890abcdef0006"},
-    "dateTime": {"$date": "2024-12-19T15:30:00.000Z"},
+    "dateTime": {"$date": "2025-12-16T20:30:00.000Z"},
     "durationMinutes": 90,
     "cost": 65,
     "notes": "Schnauzer cut, beard trim",
@@ -100,18 +100,18 @@
       "frequency": "monthly",
       "interval": 1,
       "byDay": [],
-      "endDate": {"$date": "2025-12-19T00:00:00.000Z"}
+      "endDate": {"$date": "2026-12-16T00:00:00.000Z"}
     },
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-04T14:05:00.000Z"},
-    "updatedAt": {"$date": "2024-12-04T14:05:00.000Z"}
+    "createdAt": {"$date": "2025-11-04T14:05:00.000Z"},
+    "updatedAt": {"$date": "2025-11-04T14:05:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0007"},
     "customerId": {"$oid": "674b1234567890abcdef0005"},
     "dogId": {"$oid": "674c1234567890abcdef0007"},
-    "dateTime": {"$date": "2024-12-20T09:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-17T09:00:00.000Z"},
     "durationMinutes": 90,
     "cost": 80,
     "notes": "De-shedding treatment, nail trim",
@@ -119,14 +119,14 @@
     "isRecurring": false,
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-05T16:30:00.000Z"},
-    "updatedAt": {"$date": "2024-12-05T16:30:00.000Z"}
+    "createdAt": {"$date": "2025-12-05T16:30:00.000Z"},
+    "updatedAt": {"$date": "2025-12-05T16:30:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0008"},
     "customerId": {"$oid": "674b1234567890abcdef0006"},
     "dogId": {"$oid": "674c1234567890abcdef0008"},
-    "dateTime": {"$date": "2024-12-13T11:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-06T11:00:00.000Z"},
     "durationMinutes": 60,
     "cost": 50,
     "notes": "Senior dog - gentle grooming, shorter session",
@@ -136,19 +136,19 @@
       "frequency": "weekly",
       "interval": 2,
       "byDay": ["FR"],
-      "endDate": {"$date": "2025-06-13T00:00:00.000Z"}
+      "endDate": {"$date": "2026-06-06T00:00:00.000Z"}
     },
     "conflictFlag": false,
     "paymentStatus": "paid",
     "transactionId": "pi_test_12345",
-    "createdAt": {"$date": "2024-11-28T10:00:00.000Z"},
-    "updatedAt": {"$date": "2024-12-13T12:15:00.000Z"}
+    "createdAt": {"$date": "2025-11-28T10:00:00.000Z"},
+    "updatedAt": {"$date": "2025-12-06T12:15:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0009"},
     "customerId": {"$oid": "674b1234567890abcdef0007"},
     "dogId": {"$oid": "674c1234567890abcdef0009"},
-    "dateTime": {"$date": "2024-12-14T10:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-09T10:00:00.000Z"},
     "durationMinutes": 75,
     "cost": 65,
     "notes": "Bath and nail trim, high energy dog",
@@ -157,14 +157,14 @@
     "conflictFlag": false,
     "paymentStatus": "paid",
     "transactionId": "pi_test_67890",
-    "createdAt": {"$date": "2024-12-01T13:00:00.000Z"},
-    "updatedAt": {"$date": "2024-12-14T11:30:00.000Z"}
+    "createdAt": {"$date": "2025-12-01T13:00:00.000Z"},
+    "updatedAt": {"$date": "2025-12-09T11:30:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0010"},
     "customerId": {"$oid": "674b1234567890abcdef0008"},
     "dogId": {"$oid": "674c1234567890abcdef0010"},
-    "dateTime": {"$date": "2024-12-23T14:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-17T19:00:00.000Z"},
     "durationMinutes": 90,
     "cost": 70,
     "notes": "Full groom, ear cleaning essential",
@@ -174,18 +174,18 @@
       "frequency": "monthly",
       "interval": 1,
       "byDay": [],
-      "endDate": {"$date": "2025-12-23T00:00:00.000Z"}
+      "endDate": {"$date": "2026-12-17T00:00:00.000Z"}
     },
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-06T08:00:00.000Z"},
-    "updatedAt": {"$date": "2024-12-06T08:00:00.000Z"}
+    "createdAt": {"$date": "2025-11-06T08:00:00.000Z"},
+    "updatedAt": {"$date": "2025-11-06T08:00:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0011"},
     "customerId": {"$oid": "674b1234567890abcdef0002"},
     "dogId": {"$oid": "674c1234567890abcdef0003"},
-    "dateTime": {"$date": "2024-12-10T14:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-10T19:00:00.000Z"},
     "durationMinutes": 60,
     "cost": 55,
     "notes": "Regular monthly groom",
@@ -193,14 +193,14 @@
     "isRecurring": false,
     "conflictFlag": false,
     "paymentStatus": "paid",
-    "createdAt": {"$date": "2024-11-25T11:30:00.000Z"},
-    "updatedAt": {"$date": "2024-12-10T15:15:00.000Z"}
+    "createdAt": {"$date": "2025-11-25T11:30:00.000Z"},
+    "updatedAt": {"$date": "2025-12-10T15:15:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0012"},
     "customerId": {"$oid": "674b1234567890abcdef0001"},
     "dogId": {"$oid": "674c1234567890abcdef0001"},
-    "dateTime": {"$date": "2024-11-18T09:00:00.000Z"},
+    "dateTime": {"$date": "2025-11-18T09:00:00.000Z"},
     "durationMinutes": 90,
     "cost": 75,
     "notes": "Full grooming service",
@@ -209,14 +209,14 @@
     "conflictFlag": false,
     "paymentStatus": "paid",
     "transactionId": "pi_test_11111",
-    "createdAt": {"$date": "2024-11-05T10:00:00.000Z"},
-    "updatedAt": {"$date": "2024-11-18T10:45:00.000Z"}
+    "createdAt": {"$date": "2025-11-05T10:00:00.000Z"},
+    "updatedAt": {"$date": "2025-11-18T10:45:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0013"},
     "customerId": {"$oid": "674b1234567890abcdef0003"},
     "dogId": {"$oid": "674c1234567890abcdef0004"},
-    "dateTime": {"$date": "2024-12-27T10:00:00.000Z"},
+    "dateTime": {"$date": "2025-12-18T10:00:00.000Z"},
     "durationMinutes": 60,
     "cost": 60,
     "notes": "Pre-holiday grooming",
@@ -224,14 +224,14 @@
     "isRecurring": false,
     "conflictFlag": false,
     "paymentStatus": "unpaid",
-    "createdAt": {"$date": "2024-12-07T15:20:00.000Z"},
-    "updatedAt": {"$date": "2024-12-07T15:20:00.000Z"}
+    "createdAt": {"$date": "2025-12-07T15:20:00.000Z"},
+    "updatedAt": {"$date": "2025-12-07T15:20:00.000Z"}
   },
   {
     "_id": {"$oid": "674d1234567890abcdef0014"},
     "customerId": {"$oid": "674b1234567890abcdef0005"},
     "dogId": {"$oid": "674c1234567890abcdef0007"},
-    "dateTime": {"$date": "2024-10-20T09:00:00.000Z"},
+    "dateTime": {"$date": "2025-10-20T09:00:00.000Z"},
     "durationMinutes": 90,
     "cost": 80,
     "notes": "Heavy shedding season",
@@ -239,7 +239,7 @@
     "isRecurring": false,
     "conflictFlag": false,
     "paymentStatus": "refunded",
-    "createdAt": {"$date": "2024-10-10T16:30:00.000Z"},
-    "updatedAt": {"$date": "2024-10-19T14:00:00.000Z"}
+    "createdAt": {"$date": "2025-10-10T16:30:00.000Z"},
+    "updatedAt": {"$date": "2025-10-19T14:00:00.000Z"}
   }
 ]

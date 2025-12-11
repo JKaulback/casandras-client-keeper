@@ -58,31 +58,41 @@ const appointmentSchema = new mongoose.Schema(
 // Compound index to quickly check potential overlaps per dog
 appointmentSchema.index({ dogId: 1, dateTime: 1 });
 
-// Pre-save hook placeholder for conflict detection with recurring awareness.
-// You can later expand this to search for overlapping appointments within duration.
+// Pre-save hook for conflict detection
+// Detects overlapping appointments
 appointmentSchema.pre('save', async function (next) {
   try {
-    // Example: detect overlap for the same dog within start..start+duration
-    // Skip if explicitly marked or recurring logic is pending
     const Appointment = this.constructor;
 
     const start = this.dateTime;
     const end = new Date(start.getTime() + (this.durationMinutes || 60) * 60000);
 
-    const overlapping = await Appointment.findOne({
-      dogId: this.dogId,
+    // Find all appointments
+    const otherAppointments = await Appointment.find({
       _id: { $ne: this._id },
-      dateTime: { $lt: end },
-      // naive check: find another appointment whose start is before our end
-      // For robust logic, also store endDateTime or compute on the fly.
+      status: { $nin: ['cancelled', 'completed'] }, // Only check active appointments
     }).lean();
 
-    if (overlapping) {
+    // Check for actual time overlap
+    // Two appointments overlap if:
+    // - New appointment starts before existing ends AND new appointment ends after existing starts
+    const hasOverlap = otherAppointments.some((apt) => {
+      const aptStart = new Date(apt.dateTime);
+      const aptEnd = new Date(aptStart.getTime() + (apt.durationMinutes || 60) * 60000);
+      
+      // Check if time ranges overlap
+      return start < aptEnd && end > aptStart;
+    });
+
+    if (hasOverlap) {
       this.conflictFlag = true;
-      this.conflictNote = 'Potential overlap detected';
-      // You can decide to block save by returning an error:
-      // return next(new Error('Appointment conflict detected'));
+      this.conflictNote = 'Time slot overlaps with another appointment for this dog';
+    } else {
+      // Clear conflict flag if no overlap
+      this.conflictFlag = false;
+      this.conflictNote = null;
     }
+    
     next();
   } catch (err) {
     next(err);

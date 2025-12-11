@@ -1,8 +1,6 @@
-import { Text, View, StyleSheet, ScrollView, ActivityIndicator } from "react-native";
+import { Text, View, StyleSheet, ScrollView, ActivityIndicator, useWindowDimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useEffect, useCallback } from "react";
-import * as Linking from 'expo-linking';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import authService from "../services/authService";
 import { statsService } from "../services/statsService";
 import { colors, spacing, typography } from "../styles/theme";
@@ -10,6 +8,8 @@ import { StatCard, NavCard, QuickActionButton } from "../components/DashboardCom
 
 export default function Dashboard() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
   const [loading, setLoading] = useState(true);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   
@@ -104,32 +104,37 @@ export default function Dashboard() {
       <View style={styles.navigationSection}>
         <Text style={styles.sectionTitle}>Quick Access</Text>
 
-        <NavCard
-          icon="calendar-outline"
-          title="Appointments"
-          description="View and manage all appointments"
-          backgroundColor={colors.accentLight}
-          iconColor={colors.accent}
-          onPress={() => router.push("/appointments" as any)}
-        />
+        <View style={[styles.navCardsContainer, isDesktop && styles.navCardsContainerDesktop]}>
+          <NavCard
+            icon="calendar-outline"
+            title="Appointments"
+            description="View and manage all appointments"
+            backgroundColor={colors.accentLight}
+            iconColor={colors.accent}
+            onPress={() => router.push("/appointments" as any)}
+            isDesktop={isDesktop}
+          />
 
-        <NavCard
-          icon="people-outline"
-          title="Customers"
-          description="Manage customer information"
-          backgroundColor={colors.primaryLight}
-          iconColor={colors.primary}
-          onPress={() => router.push("/customers" as any)}
-        />
+          <NavCard
+            icon="people-outline"
+            title="Customers"
+            description="Manage customer information"
+            backgroundColor={colors.primaryLight}
+            iconColor={colors.primary}
+            onPress={() => router.push("/customers" as any)}
+            isDesktop={isDesktop}
+          />
 
-        <NavCard
-          icon="paw-outline"
-          title="Dogs"
-          description="View and manage dog profiles"
-          backgroundColor={colors.secondaryLight}
-          iconColor={colors.secondary}
-          onPress={() => router.push("/dogs" as any)}
-        />
+          <NavCard
+            icon="paw-outline"
+            title="Dogs"
+            description="View and manage dog profiles"
+            backgroundColor={colors.secondaryLight}
+            iconColor={colors.secondary}
+            onPress={() => router.push("/dogs" as any)}
+            isDesktop={isDesktop}
+          />
+        </View>
       </View>
 
       {/* Quick Actions Section */}
@@ -192,6 +197,12 @@ const styles = StyleSheet.create({
   },
   navigationSection: {
     marginBottom: spacing.xxl,
+  },
+  navCardsContainer: {
+    gap: spacing.md,
+  },
+  navCardsContainerDesktop: {
+    flexDirection: "row",
   },
   sectionTitle: {
     fontSize: typography.fontSize.xl,

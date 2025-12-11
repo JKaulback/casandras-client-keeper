@@ -34,11 +34,18 @@ interface NavCardProps {
   backgroundColor: string;
   iconColor: string;
   onPress: () => void;
+  isDesktop?: boolean;
 }
 
-export function NavCard({ icon, title, description, backgroundColor, iconColor, onPress }: NavCardProps) {
+export function NavCard({ icon, title, description, backgroundColor, iconColor, onPress, isDesktop }: NavCardProps) {
   return (
-    <Pressable style={styles.navCard} onPress={onPress}>
+    <Pressable 
+      style={[
+        styles.navCard, 
+        isDesktop && styles.navCardDesktop
+      ]} 
+      onPress={onPress}
+    >
       <View style={[styles.navIconContainer, { backgroundColor }]}>
         <Ionicons name={icon} size={iconSizes.xl} color={iconColor} />
       </View>
@@ -46,7 +53,7 @@ export function NavCard({ icon, title, description, backgroundColor, iconColor, 
         <Text style={styles.navTitle}>{title}</Text>
         <Text style={styles.navDescription}>{description}</Text>
       </View>
-      <Ionicons name="chevron-forward" size={iconSizes.base} color={colors.textLight} />
+      {!isDesktop && <Ionicons name="chevron-forward" size={iconSizes.base} color={colors.textLight} />}
     </Pressable>
   );
 }
@@ -100,6 +107,13 @@ const styles = StyleSheet.create({
     padding: spacing.base,
     marginBottom: spacing.md,
     ...shadows.medium,
+  },
+  navCardDesktop: {
+    flex: 1,
+    flexDirection: "column",
+    marginBottom: 0,
+    padding: spacing.lg,
+    minHeight: 180,
   },
   navIconContainer: {
     width: 64,

@@ -12,7 +12,6 @@ import {
   KeyboardAvoidingView,
   Platform,
   useWindowDimensions,
-  ViewStyle,
 } from "react-native";
 import { colors, spacing } from "../styles/theme";
 

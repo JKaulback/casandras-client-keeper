@@ -11,6 +11,8 @@ exports.getDashboardStats = async (req, res) => {
     const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
     const endOfToday = new Date(startOfToday);
     endOfToday.setDate(endOfToday.getDate() + 1);
+    const endOfTomorrow = new Date(endOfToday);
+    endOfTomorrow.setDate(endOfTomorrow.getDate() + 1);
 
     // Run all queries in parallel for better performance
     const [
@@ -28,7 +30,10 @@ exports.getDashboardStats = async (req, res) => {
         }
       }),
       Appointment.countDocuments({
-        dateTime: { $gte: now }
+        dateTime: 
+        { $gte: endOfToday,
+          $lt: endOfTomorrow
+         }
       })
     ]);
 

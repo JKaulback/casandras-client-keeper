@@ -1,0 +1,38 @@
+[
+  {
+    "_id": {"$oid": "674a1234567890abcdef0001"},
+    "name": "Casandra Johnson",
+    "email": "casandra@groomingbusiness.com",
+    "phone": "555-0100",
+    "oauthProvider": "google",
+    "oauthId": "google_admin_001",
+    "avatarUrl": "https://i.pravatar.cc/150?img=1",
+    "role": "admin",
+    "createdAt": {"$date": "2024-01-15T10:00:00.000Z"},
+    "updatedAt": {"$date": "2024-01-15T10:00:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "674a1234567890abcdef0002"},
+    "name": "Sarah Miller",
+    "email": "sarah.miller@email.com",
+    "phone": "555-0101",
+    "oauthProvider": "google",
+    "oauthId": "google_customer_002",
+    "avatarUrl": "https://i.pravatar.cc/150?img=5",
+    "role": "customer",
+    "createdAt": {"$date": "2024-02-10T14:30:00.000Z"},
+    "updatedAt": {"$date": "2024-02-10T14:30:00.000Z"}
+  },
+  {
+    "_id": {"$oid": "674a1234567890abcdef0003"},
+    "name": "James Wilson",
+    "email": "james.wilson@email.com",
+    "phone": "555-0102",
+    "oauthProvider": "apple",
+    "oauthId": "apple_customer_003",
+    "avatarUrl": "https://i.pravatar.cc/150?img=12",
+    "role": "customer",
+    "createdAt": {"$date": "2024-03-05T09:15:00.000Z"},
+    "updatedAt": {"$date": "2024-03-05T09:15:00.000Z"}
+  }
+]

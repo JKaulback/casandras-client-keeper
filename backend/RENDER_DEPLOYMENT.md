@@ -45,10 +45,25 @@ Before deploying, scroll down to **"Environment Variables"** and add:
 
 ```
 Key: MONGODB_URI
-Value: mongodb+srv://casandras-app:***REMOVED***@personal-cluster-0.6fufnfa.mongodb.net/casandras-client-keeper
+Value: mongodb+srv://username:password@your-cluster.mongodb.net/your-database-name
 
 Key: NODE_ENV
 Value: production
+
+Key: JWT_SECRET
+Value: your-secure-jwt-secret-key-here
+
+Key: GOOGLE_CLIENT_ID
+Value: your-google-oauth-client-id
+
+Key: GOOGLE_CLIENT_SECRET
+Value: your-google-oauth-client-secret
+
+Key: GOOGLE_CALLBACK_URL
+Value: https://your-app-name.onrender.com/api/auth/google/callback
+
+Key: MOBILE_REDIRECT_URI
+Value: casandras://auth/callback
 
 Key: FRONTEND_URL
 Value: (leave empty for now, add your React Native/Expo URL later)

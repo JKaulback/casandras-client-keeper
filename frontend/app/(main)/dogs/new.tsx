@@ -4,21 +4,14 @@
  */
 
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { dogService } from "../../../services/dogService";
 import { customerService, Customer } from "../../../services/customerService";
-import { colors, spacing } from "../../../styles/theme";
 import { FormHeader, FormField, FormSection, FormActions, SelectField, SelectOption } from "../../../components/FormComponents";
 import { SimpleDatePicker } from "../../../components/SimpleDatePicker";
 import { MultiSelectTemperament } from "../../../components/MultiSelectTemperament";
+import { ResponsiveFormContainer, FormRow, FormColumn } from "../../../components/ResponsiveFormContainer";
 
 interface FormData {
   ownerId: string;
@@ -154,183 +147,189 @@ export default function NewDogScreen() {
   ];
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
-    >
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        <FormHeader
-          icon="paw"
-          title="New Dog"
-          subtitle="Enter dog information below"
+    <ResponsiveFormContainer>
+      <FormHeader
+        icon="paw"
+        title="New Dog"
+        subtitle="Enter dog information below"
+      />
+
+      <FormSection title="Owner Information">
+        <SelectField
+          label="Owner"
+          icon="person-outline"
+          required
+          placeholder="Select owner"
+          value={formData.ownerId}
+          onValueChange={(value) => updateField("ownerId", value)}
+          options={customerOptions}
+          error={errors.ownerId}
+        />
+      </FormSection>
+
+      <FormSection title="Basic Information">
+        <FormRow>
+          <FormColumn>
+            <FormField
+              label="Name"
+              icon="paw"
+              required
+              placeholder="Enter dog name"
+              value={formData.name}
+              onChangeText={(value) => updateField("name", value)}
+              autoCapitalize="words"
+              returnKeyType="next"
+              error={errors.name}
+            />
+          </FormColumn>
+
+          <FormColumn>
+            <SelectField
+              label="Sex"
+              icon="male-female-outline"
+              placeholder="Select sex"
+              value={formData.sex}
+              onValueChange={(value) => updateField("sex", value)}
+              options={sexOptions}
+            />
+          </FormColumn>
+        </FormRow>
+
+        <FormRow>
+          <FormColumn>
+            <FormField
+              label="Breed"
+              icon="search-outline"
+              placeholder="Enter breed"
+              value={formData.breed}
+              onChangeText={(value) => updateField("breed", value)}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+          </FormColumn>
+
+          <FormColumn>
+            <SimpleDatePicker
+              label="Date of Birth"
+              icon="calendar-outline"
+              value={formData.dob}
+              onValueChange={(value) => updateField("dob", value)}
+            />
+          </FormColumn>
+        </FormRow>
+
+        <FormRow>
+          <FormColumn>
+            <FormField
+              label="Color"
+              icon="color-palette-outline"
+              placeholder="Enter color"
+              value={formData.color}
+              onChangeText={(value) => updateField("color", value)}
+              autoCapitalize="words"
+              returnKeyType="next"
+            />
+          </FormColumn>
+
+          <FormColumn>
+            <FormField
+              label="Weight (lbs)"
+              icon="scale-outline"
+              placeholder="Enter weight"
+              value={formData.weight}
+              onChangeText={(value) => updateField("weight", value)}
+              keyboardType="decimal-pad"
+              returnKeyType="next"
+            />
+          </FormColumn>
+        </FormRow>
+      </FormSection>
+
+      <FormSection title="Medical Information">
+        <FormField
+          label="Veterinarian"
+          icon="medical-outline"
+          placeholder="Enter vet name/clinic"
+          value={formData.vet}
+          onChangeText={(value) => updateField("vet", value)}
+          autoCapitalize="words"
+          returnKeyType="next"
         />
 
-        <FormSection title="Owner Information">
-          <SelectField
-            label="Owner"
-            icon="person-outline"
-            required
-            placeholder="Select owner"
-            value={formData.ownerId}
-            onValueChange={(value) => updateField("ownerId", value)}
-            options={customerOptions}
-            error={errors.ownerId}
-          />
-        </FormSection>
+        <FormRow>
+          <FormColumn>
+            <SimpleDatePicker
+              label="Rabies Vaccine Date"
+              icon="medical-outline"
+              value={formData.rabiesVaccineDate}
+              onValueChange={(value) => updateField("rabiesVaccineDate", value)}
+            />
+          </FormColumn>
 
-        <FormSection title="Basic Information">
-          <FormField
-            label="Name"
-            icon="paw"
-            required
-            placeholder="Enter dog name"
-            value={formData.name}
-            onChangeText={(value) => updateField("name", value)}
-            autoCapitalize="words"
-            returnKeyType="next"
-            error={errors.name}
-          />
+          <FormColumn>
+            <SelectField
+              label="Vaccines Current?"
+              icon="shield-checkmark-outline"
+              placeholder="Select status"
+              value={formData.areVaccinesCurrent}
+              onValueChange={(value) => updateField("areVaccinesCurrent", value)}
+              options={booleanOptions}
+            />
+          </FormColumn>
+        </FormRow>
 
-          <SelectField
-            label="Sex"
-            icon="male-female-outline"
-            placeholder="Select sex"
-            value={formData.sex}
-            onValueChange={(value) => updateField("sex", value)}
-            options={sexOptions}
-          />
+        <FormRow>
+          <FormColumn>
+            <SelectField
+              label="Spayed/Neutered?"
+              icon="cut-outline"
+              placeholder="Select status"
+              value={formData.isFixed}
+              onValueChange={(value) => updateField("isFixed", value)}
+              options={booleanOptions}
+            />
+          </FormColumn>
 
-          <FormField
-            label="Breed"
-            icon="search-outline"
-            placeholder="Enter breed"
-            value={formData.breed}
-            onChangeText={(value) => updateField("breed", value)}
-            autoCapitalize="words"
-            returnKeyType="next"
-          />
+          <FormColumn flex={2}>
+            <FormField
+              label="Medical Info"
+              icon="clipboard-outline"
+              placeholder="Enter medical conditions, allergies, etc."
+              value={formData.medicalInfo}
+              onChangeText={(value) => updateField("medicalInfo", value)}
+              multiline
+              numberOfLines={3}
+              returnKeyType="next"
+            />
+          </FormColumn>
+        </FormRow>
+      </FormSection>
 
-          <SimpleDatePicker
-            label="Date of Birth"
-            icon="calendar-outline"
-            value={formData.dob}
-            onValueChange={(value) => updateField("dob", value)}
-          />
-
-          <FormField
-            label="Color"
-            icon="color-palette-outline"
-            placeholder="Enter color"
-            value={formData.color}
-            onChangeText={(value) => updateField("color", value)}
-            autoCapitalize="words"
-            returnKeyType="next"
-          />
-
-          <FormField
-            label="Weight (lbs)"
-            icon="scale-outline"
-            placeholder="Enter weight"
-            value={formData.weight}
-            onChangeText={(value) => updateField("weight", value)}
-            keyboardType="decimal-pad"
-            returnKeyType="next"
-          />
-        </FormSection>
-
-        <FormSection title="Medical Information">
-          <FormField
-            label="Veterinarian"
-            icon="medical-outline"
-            placeholder="Enter vet name/clinic"
-            value={formData.vet}
-            onChangeText={(value) => updateField("vet", value)}
-            autoCapitalize="words"
-            returnKeyType="next"
-          />
-
-          <SimpleDatePicker
-            label="Rabies Vaccine Date"
-            icon="medical-outline"
-            value={formData.rabiesVaccineDate}
-            onValueChange={(value) => updateField("rabiesVaccineDate", value)}
-          />
-
-          <SelectField
-            label="Vaccines Current?"
-            icon="shield-checkmark-outline"
-            placeholder="Select status"
-            value={formData.areVaccinesCurrent}
-            onValueChange={(value) => updateField("areVaccinesCurrent", value)}
-            options={booleanOptions}
-          />
-
-          <SelectField
-            label="Spayed/Neutered?"
-            icon="cut-outline"
-            placeholder="Select status"
-            value={formData.isFixed}
-            onValueChange={(value) => updateField("isFixed", value)}
-            options={booleanOptions}
-          />
-
-          <FormField
-            label="Medical Info"
-            icon="clipboard-outline"
-            placeholder="Enter medical conditions, allergies, etc."
-            value={formData.medicalInfo}
-            onChangeText={(value) => updateField("medicalInfo", value)}
-            multiline
-            numberOfLines={3}
-            returnKeyType="next"
-          />
-        </FormSection>
-
-        <FormSection title="Behavior">
-          <MultiSelectTemperament
-            label="Temperament"
-            value={formData.temperament}
-            onValueChange={(value) => updateField("temperament", value)}
-          />
-
-          <FormField
-            label="Notes"
-            icon="document-text-outline"
-            placeholder="Additional notes"
-            value={formData.notes}
-            onChangeText={(value) => updateField("notes", value)}
-            multiline
-            numberOfLines={4}
-            returnKeyType="done"
-          />
-        </FormSection>
-
-        <FormActions
-          onCancel={() => router.back()}
-          onSubmit={handleSubmit}
-          submitLabel="Create Dog"
-          submitting={submitting}
+      <FormSection title="Behavior">
+        <MultiSelectTemperament
+          label="Temperament"
+          value={formData.temperament}
+          onValueChange={(value) => updateField("temperament", value)}
         />
 
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+        <FormField
+          label="Notes"
+          icon="document-text-outline"
+          placeholder="Additional notes"
+          value={formData.notes}
+          onChangeText={(value) => updateField("notes", value)}
+          multiline
+          numberOfLines={4}
+          returnKeyType="done"
+        />
+      </FormSection>
+
+      <FormActions
+        onCancel={() => router.back()}
+        onSubmit={handleSubmit}
+        submitLabel="Create Dog"
+        submitting={submitting}
+      />
+    </ResponsiveFormContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: spacing.base,
-  },
-  bottomSpacer: {
-    height: spacing.xl,
-  },
-});

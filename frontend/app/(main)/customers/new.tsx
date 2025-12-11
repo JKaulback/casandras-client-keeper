@@ -4,21 +4,11 @@
  */
 
 import React, { useState } from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  ScrollView,
-  TouchableOpacity,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-} from "react-native";
+import { Alert } from "react-native";
 import { useRouter } from "expo-router";
-import { Ionicons } from "@expo/vector-icons";
 import { customerService } from "../../../services/customerService";
-import { colors, spacing, typography, borderRadius, shadows } from "../../../styles/theme";
-import { FormHeader, FormField } from "../../../components/FormComponents";
+import { FormHeader, FormField, FormSection, FormActions } from "../../../components/FormComponents";
+import { ResponsiveFormContainer, FormRow, FormColumn } from "../../../components/ResponsiveFormContainer";
 
 interface FormData {
   name: string;
@@ -145,18 +135,14 @@ export default function NewCustomerScreen() {
   };
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : "height"}
-      keyboardVerticalOffset={100}
-    >
-      <ScrollView style={styles.scrollView} contentContainerStyle={styles.scrollContent}>
-        <FormHeader
-          icon="person-add"
-          title="New Customer"
-          subtitle="Enter customer information below"
-        />
+    <ResponsiveFormContainer>
+      <FormHeader
+        icon="person-add"
+        title="New Customer"
+        subtitle="Enter customer information below"
+      />
 
+      <FormSection title="Basic Information">
         <FormField
           label="Name"
           icon="person-outline"
@@ -169,30 +155,38 @@ export default function NewCustomerScreen() {
           error={errors.name}
         />
 
-        <FormField
-          label="Phone"
-          icon="call-outline"
-          required
-          placeholder="(555) 123-4567"
-          value={formData.phone}
-          onChangeText={handlePhoneChange}
-          keyboardType="phone-pad"
-          returnKeyType="next"
-          error={errors.phone}
-        />
+        <FormRow>
+          <FormColumn>
+            <FormField
+              label="Phone"
+              icon="call-outline"
+              required
+              placeholder="(555) 123-4567"
+              value={formData.phone}
+              onChangeText={handlePhoneChange}
+              keyboardType="phone-pad"
+              returnKeyType="next"
+              error={errors.phone}
+            />
+          </FormColumn>
 
-        <FormField
-          label="Email"
-          icon="mail-outline"
-          placeholder="email@example.com"
-          value={formData.email}
-          onChangeText={(value) => updateField("email", value)}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          returnKeyType="next"
-          error={errors.email}
-        />
+          <FormColumn>
+            <FormField
+              label="Email"
+              icon="mail-outline"
+              placeholder="email@example.com"
+              value={formData.email}
+              onChangeText={(value) => updateField("email", value)}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              returnKeyType="next"
+              error={errors.email}
+            />
+          </FormColumn>
+        </FormRow>
+      </FormSection>
 
+      <FormSection title="Additional Details">
         <FormField
           label="Occupation"
           icon="briefcase-outline"
@@ -211,85 +205,17 @@ export default function NewCustomerScreen() {
           onChangeText={(value) => updateField("address", value)}
           autoCapitalize="words"
           returnKeyType="done"
-          onSubmitEditing={handleSubmit}
+          multiline
+          numberOfLines={2}
         />
+      </FormSection>
 
-        {/* Buttons */}
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={styles.submitButton}
-            onPress={handleSubmit}
-            disabled={submitting}
-          >
-            {submitting ? (
-              <Text style={styles.submitButtonText}>Creating...</Text>
-            ) : (
-              <>
-                <Ionicons name="checkmark-circle" size={20} color={colors.surface} />
-                <Text style={styles.submitButtonText}>Create Customer</Text>
-              </>
-            )}
-          </TouchableOpacity>
-
-          <TouchableOpacity
-            style={styles.cancelButton}
-            onPress={() => router.back()}
-            disabled={submitting}
-          >
-            <Text style={styles.cancelButtonText}>Cancel</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.bottomSpacer} />
-      </ScrollView>
-    </KeyboardAvoidingView>
+      <FormActions
+        onCancel={() => router.back()}
+        onSubmit={handleSubmit}
+        submitLabel="Create Customer"
+        submitting={submitting}
+      />
+    </ResponsiveFormContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  scrollView: {
-    flex: 1,
-  },
-  scrollContent: {
-    padding: spacing.base,
-  },
-  buttonContainer: {
-    marginTop: spacing.xl,
-    gap: spacing.md,
-  },
-  submitButton: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "center",
-    backgroundColor: colors.primary,
-    paddingVertical: spacing.base,
-    borderRadius: borderRadius.base,
-    gap: spacing.sm,
-    ...shadows.medium,
-  },
-  submitButtonText: {
-    color: colors.surface,
-    fontSize: typography.fontSize.lg,
-    fontWeight: typography.fontWeight.semibold,
-  },
-  cancelButton: {
-    alignItems: "center",
-    paddingVertical: spacing.base,
-    borderRadius: borderRadius.base,
-    borderWidth: 1,
-    borderColor: colors.border,
-    backgroundColor: colors.surface,
-  },
-  cancelButtonText: {
-    color: colors.text,
-    fontSize: typography.fontSize.base,
-    fontWeight: typography.fontWeight.medium,
-  },
-  bottomSpacer: {
-    height: spacing.xl,
-  },
-});

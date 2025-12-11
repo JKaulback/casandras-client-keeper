@@ -4,20 +4,11 @@
  */
 
 import React, { useState, useEffect } from "react";
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  Alert,
-  KeyboardAvoidingView,
-  Platform,
-  useWindowDimensions,
-} from "react-native";
+import { Alert } from "react-native";
 import { useRouter, useLocalSearchParams } from "expo-router";
 import { appointmentService } from "../../../services/appointmentService";
 import { customerService, Customer } from "../../../services/customerService";
 import { dogService, Dog } from "../../../services/dogService";
-import { colors, spacing } from "../../../styles/theme";
 import { 
   FormHeader, 
   FormField, 
@@ -26,6 +17,7 @@ import {
   AppointmentDateTimePicker,
   FormActions 
 } from "../../../components/FormComponents";
+import { ResponsiveFormContainer, FormRow, FormColumn } from "../../../components/ResponsiveFormContainer";
 
 interface FormData {
   customerId: string;
@@ -49,8 +41,6 @@ interface FormErrors {
 export default function NewAppointmentScreen() {
   const router = useRouter();
   const params = useLocalSearchParams();
-  const { width } = useWindowDimensions();
-  const isDesktop = Platform.OS === 'web' && width >= 768;
   const [formData, setFormData] = useState<FormData>({
     customerId: (params.customerId as string) || "",
     dogId: (params.dogId as string) || "",
@@ -217,23 +207,17 @@ export default function NewAppointmentScreen() {
   ];
 
   return (
-    <KeyboardAvoidingView
-      style={styles.container}
-      behavior={Platform.OS === "ios" ? "padding" : undefined}
-      keyboardVerticalOffset={Platform.OS === "ios" ? 90 : 0}
-    >
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        <FormHeader
-          title="New Appointment"
-          subtitle="Schedule a new grooming appointment"
-          icon="calendar"
-        />
+    <ResponsiveFormContainer>
+      <FormHeader
+        title="New Appointment"
+        subtitle="Schedule a new grooming appointment"
+        icon="calendar"
+      />
 
-        <View style={[styles.form, isDesktop && styles.formDesktop]}>
-          <FormSection title="Customer & Pet">
-            <View style={isDesktop ? styles.rowDesktop : undefined}>
-              <View style={isDesktop ? styles.fieldHalf : undefined}>
-                <SelectField
+      <FormSection title="Customer & Pet">
+        <FormRow>
+          <FormColumn>
+            <SelectField
               label="Customer"
               icon="person"
               value={formData.customerId}
@@ -246,10 +230,10 @@ export default function NewAppointmentScreen() {
               error={errors.customerId}
               required
             />
-              </View>
+          </FormColumn>
 
-              <View style={isDesktop ? styles.fieldHalf : undefined}>
-                <SelectField
+          <FormColumn>
+            <SelectField
               label="Dog"
               icon="paw"
               value={formData.dogId}
@@ -260,115 +244,86 @@ export default function NewAppointmentScreen() {
               required
               disabled={!formData.customerId}
             />
-              </View>
-            </View>
-          </FormSection>
+          </FormColumn>
+        </FormRow>
+      </FormSection>
 
-          <FormSection title="Appointment Details">
-            <AppointmentDateTimePicker
-              label="Date & Time"
-              value={formData.dateTime}
-              onValueChange={(value) => updateField("dateTime", value)}
-              error={errors.dateTime}
+      <FormSection title="Appointment Details">
+        <AppointmentDateTimePicker
+          label="Date & Time"
+          value={formData.dateTime}
+          onValueChange={(value) => updateField("dateTime", value)}
+          error={errors.dateTime}
+          required
+          existingAppointments={appointments}
+        />
+
+        <FormRow>
+          <FormColumn>
+            <SelectField
+              label="Duration"
+              icon="hourglass"
+              value={formData.durationMinutes}
+              onValueChange={(value) => updateField("durationMinutes", value)}
+              options={durationOptions}
+              error={errors.durationMinutes}
               required
-              existingAppointments={appointments}
             />
+          </FormColumn>
 
-            <View style={isDesktop ? styles.rowDesktop : undefined}>
-              <View style={isDesktop ? styles.fieldHalf : undefined}>
-                <SelectField
-                  label="Duration"
-                  icon="hourglass"
-                  value={formData.durationMinutes}
-                  onValueChange={(value) => updateField("durationMinutes", value)}
-                  options={durationOptions}
-                  error={errors.durationMinutes}
-                  required
-                />
-              </View>
-
-              <View style={isDesktop ? styles.fieldHalf : undefined}>
-                <FormField
-                  label="Cost ($)"
-                  value={formData.cost}
-                  onChangeText={handleCostChange}
-                  placeholder="50.00"
+          <FormColumn>
+            <FormField
+              label="Cost ($)"
+              value={formData.cost}
+              onChangeText={handleCostChange}
+              placeholder="50.00"
               keyboardType="decimal-pad"
               icon="pricetag"
               error={errors.cost}
               required
             />
-              </View>
-            </View>
+          </FormColumn>
+        </FormRow>
 
-            <View style={isDesktop ? styles.rowDesktop : undefined}>
-              <View style={isDesktop ? styles.fieldHalf : undefined}>
-                <SelectField
-                  label="Status"
+        <FormRow>
+          <FormColumn>
+            <SelectField
+              label="Status"
               icon="checkmark-circle"
               value={formData.status}
               onValueChange={(value) => updateField("status", value as any)}
               options={statusOptions}
             />
-              </View>
+          </FormColumn>
 
-              <View style={isDesktop ? styles.fieldHalf : undefined}>
-                <SelectField
-                  label="Payment Status"
+          <FormColumn>
+            <SelectField
+              label="Payment Status"
               icon="card"
               value={formData.paymentStatus}
               onValueChange={(value) => updateField("paymentStatus", value as any)}
               options={paymentStatusOptions}
             />
-              </View>
-            </View>
+          </FormColumn>
+        </FormRow>
 
-            <FormField
-              label="Notes"
-              value={formData.notes}
-              onChangeText={(value) => updateField("notes", value)}
-              placeholder="Add any special instructions or notes..."
-              multiline
-              numberOfLines={4}
-              icon="document-text"
-            />
-          </FormSection>
+        <FormField
+          label="Notes"
+          value={formData.notes}
+          onChangeText={(value) => updateField("notes", value)}
+          placeholder="Add any special instructions or notes..."
+          multiline
+          numberOfLines={4}
+          icon="document-text"
+        />
+      </FormSection>
 
-          <FormActions
-            onCancel={() => router.back()}
-            onSubmit={handleSubmit}
-            submitLabel="Create Appointment"
-            submitting={submitting}
-          />
-        </View>
-      </ScrollView>
-    </KeyboardAvoidingView>
+      <FormActions
+        onCancel={() => router.back()}
+        onSubmit={handleSubmit}
+        submitLabel="Create Appointment"
+        submitting={submitting}
+      />
+    </ResponsiveFormContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: colors.background,
-  },
-  scrollContent: {
-    paddingBottom: spacing.xl,
-  },
-  form: {
-    padding: spacing.lg,
-  },
-  formDesktop: {
-    maxWidth: 900,
-    marginHorizontal: "auto" as any,
-    width: "100%",
-  },
-  rowDesktop: {
-    flexDirection: "row",
-    gap: spacing.lg,
-    marginHorizontal: -spacing.sm,
-  },
-  fieldHalf: {
-    flex: 1,
-    marginHorizontal: spacing.sm,
-  },
-});

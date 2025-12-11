@@ -43,7 +43,6 @@ export default function DogsScreen() {
 
   useEffect(() => {
     fetchDogs();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const onRefresh = useCallback(() => {

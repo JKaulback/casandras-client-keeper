@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Alert, TouchableOpacity, Text } from "react-native";
+import { View, StyleSheet, ScrollView, Alert, TouchableOpacity, Text, useWindowDimensions } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { dogService, Dog } from "../../../services/dogService";
 import { customerService, Customer } from "../../../services/customerService";
@@ -22,6 +22,8 @@ import { Ionicons } from "@expo/vector-icons";
 export default function DogDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
   const [dog, setDog] = useState<Dog | null>(null);
   const [owner, setOwner] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
@@ -99,13 +101,14 @@ export default function DogDetailScreen() {
   const age = calculateAge(dog.dob);
 
   return (
-    <ScrollView style={styles.container}>
-      <DetailHeaderCard
-        icon="paw"
-        iconColor={colors.secondary}
-        name={dog.name}
-        subtitle={dog.breed || "Mixed Breed"}
-      />
+    <ScrollView style={styles.container} contentContainerStyle={isDesktop ? styles.desktopContainer : undefined}>
+      <View style={isDesktop ? styles.contentWrapper : undefined}>
+        <DetailHeaderCard
+          icon="paw"
+          iconColor={colors.secondary}
+          name={dog.name}
+          subtitle={dog.breed || "Mixed Breed"}
+        />
 
       {/* Owner Information */}
       {owner && (
@@ -253,6 +256,7 @@ export default function DogDetailScreen() {
       <DetailButtonContainer onEdit={() => {}} onDelete={handleDelete} editLabel="Edit Dog" />
 
       <View style={styles.bottomSpacer} />
+      </View>
     </ScrollView>
   );
 }
@@ -261,6 +265,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  desktopContainer: {
+    alignItems: 'center',
+  },
+  contentWrapper: {
+    width: '100%',
+    maxWidth: 800,
   },
   ownerCard: {
     flexDirection: "row",

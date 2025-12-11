@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState } from "react";
-import { View, StyleSheet, ScrollView, Alert } from "react-native";
+import { View, StyleSheet, ScrollView, Alert, useWindowDimensions } from "react-native";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { customerService, Customer } from "../../../services/customerService";
 import { colors, spacing } from "../../../styles/theme";
@@ -20,6 +20,8 @@ import { LoadingState, ErrorState } from "../../../components/StateComponents";
 export default function CustomerDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
   const [customer, setCustomer] = useState<Customer | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -78,12 +80,13 @@ export default function CustomerDetailScreen() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <DetailHeaderCard
-        icon="person"
-        name={customer.name}
-        subtitle={`Member since ${new Date(customer.createdAt || "").toLocaleDateString()}`}
-      />
+    <ScrollView style={styles.container} contentContainerStyle={isDesktop ? styles.desktopContainer : undefined}>
+      <View style={isDesktop ? styles.contentWrapper : undefined}>
+        <DetailHeaderCard
+          icon="person"
+          name={customer.name}
+          subtitle={`Member since ${new Date(customer.createdAt || "").toLocaleDateString()}`}
+        />
 
       <DetailSection title="Contact Information">
         <InfoRow icon="call" label="Phone" value={customer.phone} isLast={!customer.email && !customer.address && !customer.occupation} />
@@ -107,6 +110,7 @@ export default function CustomerDetailScreen() {
       <DetailButtonContainer onEdit={() => {}} onDelete={handleDelete} editLabel="Edit Customer" />
 
       <View style={styles.bottomSpacer} />
+      </View>
     </ScrollView>
   );
 }
@@ -115,6 +119,13 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: colors.background,
+  },
+  desktopContainer: {
+    alignItems: 'center',
+  },
+  contentWrapper: {
+    width: '100%',
+    maxWidth: 800,
   },
   bottomSpacer: {
     height: spacing.xl,

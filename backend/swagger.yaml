@@ -1,0 +1,1148 @@
+openapi: 3.0.0
+info:
+  title: Casandra's Client Keeper API
+  description: API for managing customers, dogs, appointments, and users for a pet grooming business
+  version: 1.0.0
+  contact:
+    name: API Support
+
+servers:
+  - url: http://localhost:3000
+    description: Development server
+  - url: https://your-production-url.com
+    description: Production server
+
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT token obtained from OAuth authentication
+  
+  schemas:
+    User:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+        name:
+          type: string
+        email:
+          type: string
+          format: email
+        phone:
+          type: string
+        oauthProvider:
+          type: string
+          enum: [google, facebook, apple]
+        oauthId:
+          type: string
+        avatarUrl:
+          type: string
+          format: uri
+        role:
+          type: string
+          enum: [admin, customer]
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    Customer:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+        name:
+          type: string
+        phone:
+          type: string
+        email:
+          type: string
+          format: email
+        address:
+          type: string
+        notes:
+          type: string
+        userId:
+          type: string
+          format: objectId
+          description: Reference to User if customer has an account
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    Dog:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+        name:
+          type: string
+        breed:
+          type: string
+        weight:
+          type: number
+        age:
+          type: number
+        temperament:
+          type: array
+          items:
+            type: string
+        specialNotes:
+          type: string
+        owner:
+          type: string
+          format: objectId
+          description: Reference to Customer
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    Appointment:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: objectId
+        customer:
+          type: string
+          format: objectId
+          description: Reference to Customer
+        dog:
+          type: string
+          format: objectId
+          description: Reference to Dog
+        dateTime:
+          type: string
+          format: date-time
+        duration:
+          type: number
+          description: Duration in minutes
+        service:
+          type: string
+        price:
+          type: number
+        status:
+          type: string
+          enum: [pending, confirmed, completed, cancelled]
+        paymentStatus:
+          type: string
+          enum: [unpaid, paid, refunded]
+        notes:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    Error:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: false
+        error:
+          type: string
+    
+    Success:
+      type: object
+      properties:
+        success:
+          type: boolean
+          example: true
+        data:
+          type: object
+
+security:
+  - BearerAuth: []
+
+paths:
+  /:
+    get:
+      summary: API Welcome Message
+      description: Returns a welcome message for the API
+      tags:
+        - Health
+      security: []
+      responses:
+        '200':
+          description: Welcome message
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+
+  /health:
+    get:
+      summary: Health Check
+      description: Check if the server is running
+      tags:
+        - Health
+      security: []
+      responses:
+        '200':
+          description: Server is healthy
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                    example: ok
+                  timestamp:
+                    type: string
+                    format: date-time
+
+  /api/users:
+    get:
+      summary: Get all users
+      tags:
+        - Users
+      responses:
+        '200':
+          description: List of all users
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/User'
+    
+    post:
+      summary: Create a new user
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - email
+                - oauthProvider
+                - oauthId
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                  format: email
+                phone:
+                  type: string
+                oauthProvider:
+                  type: string
+                  enum: [google, facebook, apple]
+                oauthId:
+                  type: string
+                avatarUrl:
+                  type: string
+                role:
+                  type: string
+                  enum: [admin, customer]
+      responses:
+        '201':
+          description: User created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+        '400':
+          description: Invalid input
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+
+  /api/users/{id}:
+    get:
+      summary: Get user by ID
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+        '404':
+          description: User not found
+    
+    put:
+      summary: Update user
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                email:
+                  type: string
+                phone:
+                  type: string
+                avatarUrl:
+                  type: string
+                role:
+                  type: string
+      responses:
+        '200':
+          description: User updated successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+    
+    delete:
+      summary: Delete user
+      tags:
+        - Users
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User deleted successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  message:
+                    type: string
+
+  /api/users/oauth/{oauthId}:
+    get:
+      summary: Get user by OAuth ID
+      tags:
+        - Users
+      parameters:
+        - name: oauthId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/User'
+
+  /api/customers:
+    get:
+      summary: Get all customers
+      tags:
+        - Customers
+      responses:
+        '200':
+          description: List of all customers
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customer'
+    
+    post:
+      summary: Create a new customer
+      tags:
+        - Customers
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - phone
+              properties:
+                name:
+                  type: string
+                phone:
+                  type: string
+                email:
+                  type: string
+                address:
+                  type: string
+                notes:
+                  type: string
+                userId:
+                  type: string
+      responses:
+        '201':
+          description: Customer created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Customer'
+
+  /api/customers/search:
+    get:
+      summary: Search customers
+      tags:
+        - Customers
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: phone
+          in: query
+          schema:
+            type: string
+        - name: email
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Customer'
+
+  /api/customers/{id}:
+    get:
+      summary: Get customer by ID
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Customer'
+    
+    put:
+      summary: Update customer
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                phone:
+                  type: string
+                email:
+                  type: string
+                address:
+                  type: string
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Customer updated successfully
+    
+    delete:
+      summary: Delete customer
+      tags:
+        - Customers
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer deleted successfully
+
+  /api/dogs:
+    get:
+      summary: Get all dogs
+      tags:
+        - Dogs
+      responses:
+        '200':
+          description: List of all dogs
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Dog'
+    
+    post:
+      summary: Create a new dog
+      tags:
+        - Dogs
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - breed
+                - owner
+              properties:
+                name:
+                  type: string
+                breed:
+                  type: string
+                weight:
+                  type: number
+                age:
+                  type: number
+                temperament:
+                  type: array
+                  items:
+                    type: string
+                specialNotes:
+                  type: string
+                owner:
+                  type: string
+                  description: Customer ID
+      responses:
+        '201':
+          description: Dog created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Dog'
+
+  /api/dogs/search:
+    get:
+      summary: Search dogs
+      tags:
+        - Dogs
+      parameters:
+        - name: name
+          in: query
+          schema:
+            type: string
+        - name: breed
+          in: query
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Dog'
+
+  /api/dogs/owner/{ownerId}:
+    get:
+      summary: Get dogs by owner (customer)
+      tags:
+        - Dogs
+      parameters:
+        - name: ownerId
+          in: path
+          required: true
+          schema:
+            type: string
+          description: Customer ID
+      responses:
+        '200':
+          description: List of dogs owned by customer
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Dog'
+
+  /api/dogs/{id}:
+    get:
+      summary: Get dog by ID
+      tags:
+        - Dogs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dog details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Dog'
+    
+    put:
+      summary: Update dog
+      tags:
+        - Dogs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                breed:
+                  type: string
+                weight:
+                  type: number
+                age:
+                  type: number
+                temperament:
+                  type: array
+                  items:
+                    type: string
+                specialNotes:
+                  type: string
+      responses:
+        '200':
+          description: Dog updated successfully
+    
+    delete:
+      summary: Delete dog
+      tags:
+        - Dogs
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dog deleted successfully
+
+  /api/appointments:
+    get:
+      summary: Get all appointments
+      tags:
+        - Appointments
+      responses:
+        '200':
+          description: List of all appointments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+    
+    post:
+      summary: Create a new appointment
+      tags:
+        - Appointments
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - customer
+                - dog
+                - dateTime
+                - service
+              properties:
+                customer:
+                  type: string
+                  description: Customer ID
+                dog:
+                  type: string
+                  description: Dog ID
+                dateTime:
+                  type: string
+                  format: date-time
+                duration:
+                  type: number
+                  default: 60
+                service:
+                  type: string
+                price:
+                  type: number
+                status:
+                  type: string
+                  enum: [pending, confirmed, completed, cancelled]
+                  default: pending
+                paymentStatus:
+                  type: string
+                  enum: [unpaid, paid, refunded]
+                  default: unpaid
+                notes:
+                  type: string
+      responses:
+        '201':
+          description: Appointment created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Appointment'
+
+  /api/appointments/range:
+    get:
+      summary: Get appointments by date range
+      tags:
+        - Appointments
+      parameters:
+        - name: startDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+        - name: endDate
+          in: query
+          required: true
+          schema:
+            type: string
+            format: date-time
+      responses:
+        '200':
+          description: Appointments within date range
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+
+  /api/appointments/customer/{customerId}:
+    get:
+      summary: Get appointments by customer
+      tags:
+        - Appointments
+      parameters:
+        - name: customerId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Customer's appointments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+
+  /api/appointments/dog/{dogId}:
+    get:
+      summary: Get appointments by dog
+      tags:
+        - Appointments
+      parameters:
+        - name: dogId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Dog's appointments
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+
+  /api/appointments/status/{status}:
+    get:
+      summary: Get appointments by status
+      tags:
+        - Appointments
+      parameters:
+        - name: status
+          in: path
+          required: true
+          schema:
+            type: string
+            enum: [pending, confirmed, completed, cancelled]
+      responses:
+        '200':
+          description: Appointments with specified status
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Appointment'
+
+  /api/appointments/{id}:
+    get:
+      summary: Get appointment by ID
+      tags:
+        - Appointments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Appointment details
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Appointment'
+    
+    put:
+      summary: Update appointment
+      tags:
+        - Appointments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                customer:
+                  type: string
+                dog:
+                  type: string
+                dateTime:
+                  type: string
+                  format: date-time
+                duration:
+                  type: number
+                service:
+                  type: string
+                price:
+                  type: number
+                status:
+                  type: string
+                paymentStatus:
+                  type: string
+                notes:
+                  type: string
+      responses:
+        '200':
+          description: Appointment updated successfully
+    
+    delete:
+      summary: Delete appointment (hard delete)
+      tags:
+        - Appointments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Appointment deleted successfully
+
+  /api/appointments/{id}/cancel:
+    patch:
+      summary: Cancel appointment (soft delete)
+      tags:
+        - Appointments
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Appointment cancelled successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    $ref: '#/components/schemas/Appointment'
+
+  /api/stats/dashboard:
+    get:
+      summary: Get dashboard statistics
+      description: Returns aggregate statistics for the dashboard including total customers, total dogs, today's appointments, and upcoming appointments
+      tags:
+        - Stats
+      responses:
+        '200':
+          description: Dashboard statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+                    properties:
+                      totalCustomers:
+                        type: number
+                      totalDogs:
+                        type: number
+                      todayAppointments:
+                        type: number
+                      upcomingAppointments:
+                        type: number
+
+  /api/stats/appointments:
+    get:
+      summary: Get appointment statistics
+      description: Returns detailed statistics about appointments
+      tags:
+        - Stats
+      responses:
+        '200':
+          description: Appointment statistics
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  success:
+                    type: boolean
+                  data:
+                    type: object
+
+  /api/auth/google:
+    get:
+      summary: Initiate Google OAuth
+      description: Redirects to Google OAuth consent screen
+      tags:
+        - Authentication
+      security: []
+      parameters:
+        - name: mobile
+          in: query
+          schema:
+            type: boolean
+          description: Set to true for mobile app authentication
+        - name: redirectUri
+          in: query
+          schema:
+            type: string
+          description: Custom redirect URI for mobile apps
+      responses:
+        '302':
+          description: Redirect to Google OAuth
+
+  /api/auth/google/callback:
+    get:
+      summary: Google OAuth callback
+      description: Handles the callback from Google OAuth and returns JWT token
+      tags:
+        - Authentication
+      security: []
+      parameters:
+        - name: code
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          schema:
+            type: string
+      responses:
+        '302':
+          description: Redirect with token or error
+
+tags:
+  - name: Health
+    description: Health check and status endpoints
+  - name: Authentication
+    description: OAuth authentication endpoints
+  - name: Users
+    description: User management endpoints
+  - name: Customers
+    description: Customer management endpoints
+  - name: Dogs
+    description: Dog management endpoints
+  - name: Appointments
+    description: Appointment management endpoints
+  - name: Stats
+    description: Statistics and analytics endpoints

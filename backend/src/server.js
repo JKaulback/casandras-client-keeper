@@ -6,10 +6,16 @@ const cors = require('cors');
 const morgan = require('morgan');
 const passport = require('passport');
 const cookieParser = require('cookie-parser');
+const path = require('path');
+const swaggerUi = require('swagger-ui-express');
+const YAML = require('yamljs');
 const connectDB = require('./db/connectDB');
 const logger = require('./utils/logger');
 const validateEnv = require('./utils/validateEnv');
 const errorHandler = require('./middleware/errorHandler');
+
+// Load Swagger documentation
+const swaggerDocument = YAML.load(path.join(__dirname, '../swagger.yaml'));
 
 // Validate environment variables before starting
 validateEnv();
@@ -55,6 +61,12 @@ app.use(cors({
 // Initialize passport
 app.use(passport.initialize());
 
+// Swagger API Documentation
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument, {
+  customCss: '.swagger-ui .topbar { display: none }',
+  customSiteTitle: "Casandra's Client Keeper API Docs"
+}));
+
 // Routes
 const authRoutes = require('./routes/authRoutes');
 const userRoutes = require('./routes/userRoutes');
@@ -72,7 +84,10 @@ app.use('/api/stats', statsRoutes);
 
 // Basic route for testing
 app.get('/', (req, res) => {
-  res.json({ message: 'Welcome to Casandra\'s Client Keeper API' });
+  res.json({ 
+    message: 'Welcome to Casandra\'s Client Keeper API',
+    documentation: `${req.protocol}://${req.get('host')}/api-docs`
+  });
 });
 
 // Health check endpoint

@@ -1,4 +1,4 @@
-import { View, StyleSheet, FlatList, RefreshControl } from "react-native";
+import { View, StyleSheet, FlatList, RefreshControl, useWindowDimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { useState, useEffect } from "react";
 import { colors, spacing } from "../../../styles/theme";
@@ -8,6 +8,9 @@ import { LoadingState } from "../../../components/StateComponents";
 
 export default function CustomersIndex() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
+  const numColumns = isDesktop ? 2 : 1;
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [filteredCustomers, setFilteredCustomers] = useState<Customer[]>([]);
   const [searchQuery, setSearchQuery] = useState("");
@@ -101,9 +104,12 @@ export default function CustomersIndex() {
       />
 
       <FlatList
+        key={numColumns}
         data={filteredCustomers}
         renderItem={renderCustomerItem}
         keyExtractor={(item) => item._id}
+        numColumns={numColumns}
+        columnWrapperStyle={isDesktop ? styles.gridRow : undefined}
         contentContainerStyle={styles.listContainer}
         ListEmptyComponent={renderEmptyState}
         refreshControl={
@@ -126,6 +132,10 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: spacing.base,
     paddingTop: 0,
+  },
+  gridRow: {
+    gap: spacing.base,
+    paddingHorizontal: spacing.base,
   },
 });
 

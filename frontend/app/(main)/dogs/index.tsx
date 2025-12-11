@@ -4,7 +4,7 @@
  */
 
 import React, { useEffect, useState, useCallback } from "react";
-import { View, StyleSheet, FlatList, RefreshControl, Alert } from "react-native";
+import { View, StyleSheet, FlatList, RefreshControl, Alert, useWindowDimensions } from "react-native";
 import { useRouter } from "expo-router";
 import { dogService, Dog } from "../../../services/dogService";
 import { colors, spacing } from "../../../styles/theme";
@@ -18,6 +18,9 @@ import { LoadingState } from "../../../components/StateComponents";
 
 export default function DogsScreen() {
   const router = useRouter();
+  const { width } = useWindowDimensions();
+  const isDesktop = width >= 768;
+  const numColumns = isDesktop ? 2 : 1;
   const [dogs, setDogs] = useState<Dog[]>([]);
   const [filteredDogs, setFilteredDogs] = useState<Dog[]>([]);
   const [loading, setLoading] = useState(true);
@@ -128,9 +131,12 @@ export default function DogsScreen() {
       />
 
       <FlatList
+        key={numColumns}
         data={filteredDogs}
         renderItem={renderDogItem}
         keyExtractor={(item) => item._id}
+        numColumns={numColumns}
+        columnWrapperStyle={isDesktop ? styles.gridRow : undefined}
         contentContainerStyle={styles.listContainer}
         refreshControl={<RefreshControl refreshing={refreshing} onRefresh={onRefresh} colors={[colors.primary]} />}
         ListEmptyComponent={
@@ -153,5 +159,9 @@ const styles = StyleSheet.create({
   listContainer: {
     padding: spacing.base,
     paddingTop: 0,
+  },
+  gridRow: {
+    gap: spacing.base,
+    paddingHorizontal: spacing.base,
   },
 });

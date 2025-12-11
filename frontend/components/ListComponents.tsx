@@ -166,6 +166,7 @@ const styles = StyleSheet.create({
 
   // List Item Card Styles
   itemCard: {
+    flex: 1,
     flexDirection: "row",
     alignItems: "center",
     backgroundColor: colors.surface,

@@ -6,6 +6,16 @@
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "41678753"
 	},
+	"auth": {
+		"type": "bearer",
+		"bearer": [
+			{
+				"key": "token",
+				"value": "{{BEARER_TOKEN}}",
+				"type": "string"
+			}
+		]
+	},
 	"item": [
 		{
 			"name": "Users",
@@ -1247,6 +1257,47 @@
 			]
 		},
 		{
+			"name": "Stats",
+			"item": [
+				{
+					"name": "Get Dashboard Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{STATS_API}}/dashboard",
+							"host": [
+								"{{BASE_URL}}{{STATS_API}}"
+							],
+							"path": [
+								"dashboard"
+							]
+						},
+						"description": "Get dashboard statistics including total customers, total dogs, today's appointments, and upcoming appointments"
+					},
+					"response": []
+				},
+				{
+					"name": "Get Appointment Stats",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{BASE_URL}}{{STATS_API}}/appointments",
+							"host": [
+								"{{BASE_URL}}{{STATS_API}}"
+							],
+							"path": [
+								"appointments"
+							]
+						},
+						"description": "Get appointment-specific statistics"
+					},
+					"response": []
+				}
+			]
+		},
+		{
 			"name": "Health Check",
 			"request": {
 				"method": "GET",
@@ -1308,6 +1359,11 @@
 		},
 		{
 			"key": "APPOINTMENTS_API",
+			"value": "",
+			"type": "default"
+		},
+		{
+			"key": "STATS_API",
 			"value": "",
 			"type": "default"
 		}

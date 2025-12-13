@@ -1,32 +1,11 @@
 const express = require('express');
 const passport = require('passport');
-const GoogleStrategy = require('passport-google-oauth20');
 const googleAuthHandler = require('../config/googleAuth');
 const mobileDevSuccess = require('../templates/mobileDevSuccess');
 const mobileProdSuccess = require('../templates/mobileProdSuccess');
 const webSuccess = require('../templates/webSuccess');
 
 const router = express.Router();
-
-// Configure Google Strategy with dynamic callback
-passport.use(
-    new GoogleStrategy(
-        {
-            clientID: process.env.GOOGLE_CLIENT_ID,
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-            callbackURL: process.env.GOOGLE_CALLBACK_URL || 'http://localhost:3000/api/auth/google/callback',
-            passReqToCallback: true
-        },
-        async (req, accessToken, refreshToken, profile, done) => {
-            try {
-                const user = await googleAuthHandler.findOrCreateUser(profile);
-                done(null, user);
-            } catch (error) {
-                done(error, null);
-            }
-        }
-    )
-);
 
 // Initiate Google OAuth
 router.get('/google', (req, res, next) => {

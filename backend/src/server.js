@@ -1,5 +1,6 @@
 // Load environment variables from .env file (for local development)
 require('dotenv').config();
+require('./config/passport'); // Set up passportJS for OAuth
 
 const express = require('express');
 const cors = require('cors');

@@ -2,6 +2,9 @@ const express = require('express');
 const passport = require('passport');
 const GoogleStrategy = require('passport-google-oauth20');
 const googleAuthHandler = require('../config/googleAuth');
+const mobileDevSuccess = require('../templates/mobileDevSuccess');
+const mobileProdSuccess = require('../templates/mobileProdSuccess');
+const webSuccess = require('../templates/webSuccess');
 
 const router = express.Router();
 
@@ -98,13 +101,13 @@ router.get('/google/callback',
             console.log('Is development mode:', isDevelopment);
             
             const redirectUrl = `${redirectUri}?token=${token}`; // With the jwt as a query param
-            console.log('Final redirect URL:', redirectUrl);
-            console.log('Token (first 50 chars):', token.substring(0, 50) + '...');
-            console.log('===========================');
             
             // For Expo development, the redirect won't work from Chrome Custom Tabs
             // Store token temporarily so app can retrieve it
             if (isDevelopment) {
+                console.log('Final redirect URL:', redirectUrl);
+                console.log('Token (first 50 chars):', token.substring(0, 50) + '...');
+                console.log('===========================');
                 // Store the token with user's email as key for retrieval
                 const userEmail = req.user.email;
                 global.devTokens = global.devTokens || {};
@@ -121,207 +124,16 @@ router.get('/google/callback',
                 
                 console.log('Stored dev token for:', userEmail);
                 
-                const html = `<!DOCTYPE html>
-<html>
-<head>
-    <title>Authentication Successful</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            max-width: 500px;
-            width: 100%;
-        }
-        .icon { font-size: 64px; margin-bottom: 1rem; }
-        h1 { margin: 0 0 1rem 0; font-size: 24px; }
-        p { margin: 0.5rem 0; opacity: 0.9; line-height: 1.5; }
-        .email {
-            margin-top: 1rem;
-            padding: 0.75rem;
-            background: rgba(255, 255, 255, 0.2);
-            border-radius: 8px;
-            font-weight: bold;
-            font-size: 16px;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="icon">✓</div>
-        <h1>Authentication Successful!</h1>
-        <p><strong>You can now close this window</strong></p>
-        <p style="font-size: 14px; margin-top: 1rem;">Return to the app and sign in again. Your authentication is ready.</p>
-        <div class="email">
-            ${userEmail}
-        </div>
-    </div>
-    <script>
-        setTimeout(function() {
-            window.close();
-        }, 3000);
-    </script>
-</body>
-</html>`;
-                res.send(html);
+                res.send(mobileDevSuccess(userEmail));
                 return;
             }
             
             // For production builds with proper deep links
             // Send HTML page with redirect link
-            const html = `<!DOCTYPE html>
-<html>
-<head>
-    <title>Authentication Successful</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <style>
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            min-height: 100vh;
-            margin: 0;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            text-align: center;
-            padding: 20px;
-            box-sizing: border-box;
-        }
-        .container {
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            padding: 2rem;
-            backdrop-filter: blur(10px);
-            max-width: 500px;
-            width: 100%;
-        }
-        .icon { font-size: 64px; margin-bottom: 1rem; }
-        h1 { margin: 0 0 1rem 0; font-size: 24px; }
-        p { margin: 0.5rem 0; opacity: 0.9; }
-        .button {
-            display: inline-block;
-            margin-top: 1rem;
-            padding: 12px 24px;
-            background: rgba(255, 255, 255, 0.2);
-            color: white;
-            text-decoration: none;
-            border-radius: 8px;
-            font-weight: bold;
-        }
-        .debug {
-            margin-top: 1rem;
-            padding: 1rem;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 8px;
-            font-size: 12px;
-            word-break: break-all;
-            max-height: 150px;
-            overflow-y: auto;
-        }
-    </style>
-</head>
-<body>
-    <div class="container">
-        <div class="icon">✓</div>
-        <h1>Authentication Successful!</h1>
-        <p id="status">Redirecting to app...</p>
-        <a href="${redirectUrl}" class="button" id="manualLink">Open App</a>
-        <div class="debug">
-            <p><strong>Redirect URL:</strong></p>
-            <p>${redirectUrl}</p>
-        </div>
-    </div>
-    <script>
-        setTimeout(function() {
-            window.location.href = '${redirectUrl}';
-        }, 500);
-        setTimeout(function() {
-            document.getElementById('status').innerHTML = 'Click the button above to open the app.';
-        }, 2000);
-    </script>
-</body>
-</html>`;
-            res.send(html);
+            res.send(mobileProdSuccess(redirectUrl));
         } else {
             // For web, send HTML that closes the popup and notifies the parent window
-            res.send(`
-                <!DOCTYPE html>
-                <html>
-                <head>
-                    <title>Authentication Successful</title>
-                    <style>
-                        body {
-                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            justify-content: center;
-                            height: 100vh;
-                            margin: 0;
-                            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                            color: white;
-                        }
-                        .container {
-                            text-align: center;
-                            padding: 2rem;
-                            background: rgba(255, 255, 255, 0.1);
-                            border-radius: 12px;
-                            backdrop-filter: blur(10px);
-                        }
-                        .icon {
-                            font-size: 64px;
-                            margin-bottom: 1rem;
-                        }
-                        h1 {
-                            margin: 0 0 1rem 0;
-                            font-size: 24px;
-                        }
-                        p {
-                            margin: 0;
-                            opacity: 0.9;
-                        }
-                    </style>
-                </head>
-                <body>
-                    <div class="container">
-                        <div class="icon">✓</div>
-                        <h1>Authentication Successful!</h1>
-                        <p>You can close this window now.</p>
-                    </div>
-                    <script>
-                        // Notify parent window (if opened from window.open)
-                        if (window.opener) {
-                            window.opener.postMessage({ 
-                                type: 'auth_success',
-                                token: '${token}'
-                            }, '*');
-                        }
-                        // Auto-close after 2 seconds
-                        setTimeout(() => {
-                            window.close();
-                        }, 2000);
-                    </script>
-                </body>
-                </html>
-            `);
+            res.send(webSuccess(token));
         }
     }
 );

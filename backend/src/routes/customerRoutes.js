@@ -1,25 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const {
-  getAllCustomers,
-  getCustomerById,
-  createCustomer,
-  updateCustomer,
-  deleteCustomer,
-  searchCustomers
-} = require('../controllers/customerController');
+const customerController = require('../controllers/customerController');
 
 // Search route (must be before /:id to avoid conflict)
-router.get('/search', searchCustomers);
+router.get('/search', customerController.searchCustomers);
 
 // Standard CRUD routes
 router.route('/')
-  .get(getAllCustomers)
-  .post(createCustomer);
+  .get(customerController.getAllCustomers)
+  .post(customerController.createCustomer);
 
 router.route('/:id')
-  .get(getCustomerById)
-  .put(updateCustomer)
-  .delete(deleteCustomer);
+  .get(customerController.getCustomerById)
+  .put(customerController.updateCustomer)
+  .delete(customerController.deleteCustomer);
 
 module.exports = router;

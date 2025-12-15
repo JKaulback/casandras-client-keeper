@@ -20,8 +20,8 @@ router.get('/google/callback',
 router.get('/failure', authController.failure);
 
 // Development token retrieval
-router.get('/dev/token', authController.getDevToken);
-router.get('/dev/token/latest', authController.getDevTokenLatest);
+router.get('/dev-token/:email', authController.getDevToken);
+router.get('/dev-token-latest', authController.getDevTokenLatest);
 
 // Token verification
 router.post('/verify', authController.verifyToken);

@@ -1,14 +1,11 @@
 const express = require('express');
 const router = express.Router();
-const {
-  getDashboardStats,
-  getAppointmentStats
-} = require('../controllers/statsController');
+const statsController = require('../controllers/statsController');
 
 // Dashboard statistics
-router.get('/dashboard', getDashboardStats);
+router.get('/dashboard', statsController.getDashboardStats);
 
 // Appointment-specific statistics
-router.get('/appointments', getAppointmentStats);
+router.get('/appointments', statsController.getAppointmentStats);
 
 module.exports = router;

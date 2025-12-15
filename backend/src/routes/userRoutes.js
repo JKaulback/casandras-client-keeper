@@ -1,25 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const {
-  getAllUsers,
-  getUserById,
-  createUser,
-  updateUser,
-  deleteUser,
-  getUserByOAuthId
-} = require('../controllers/userController');
+const userController = require('../controllers/userController');
 
 // Standard CRUD routes
 router.route('/')
-  .get(getAllUsers)
-  .post(createUser);
+  .get(userController.getAllUsers)
+  .post(userController.createUser);
 
 router.route('/:id')
-  .get(getUserById)
-  .put(updateUser)
-  .delete(deleteUser);
+  .get(userController.getUserById)
+  .put(userController.updateUser)
+  .delete(userController.deleteUser);
 
 // Custom route for OAuth lookup
-router.get('/oauth/:oauthId', getUserByOAuthId);
+router.get('/oauth/:oauthId', userController.getUserByOAuthId);
 
 module.exports = router;

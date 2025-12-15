@@ -1,29 +1,21 @@
 const express = require('express');
 const router = express.Router();
-const {
-  getAllDogs,
-  getDogById,
-  getDogsByOwner,
-  createDog,
-  updateDog,
-  deleteDog,
-  searchDogs
-} = require('../controllers/dogController');
+const dogsController = require('../controllers/dogController');
 
 // Search route (must be before /:id to avoid conflict)
-router.get('/search', searchDogs);
+router.get('/search', dogsController.searchDogs);
 
 // Get dogs by owner
-router.get('/owner/:ownerId', getDogsByOwner);
+router.get('/owner/:ownerId', dogsController.getDogsByOwner);
 
 // Standard CRUD routes
 router.route('/')
-  .get(getAllDogs)
-  .post(createDog);
+  .get(dogsController.getAllDogs)
+  .post(dogsController.createDog);
 
 router.route('/:id')
-  .get(getDogById)
-  .put(updateDog)
-  .delete(deleteDog);
+  .get(dogsController.getDogById)
+  .put(dogsController.updateDog)
+  .delete(dogsController.deleteDog);
 
 module.exports = router;

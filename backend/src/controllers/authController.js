@@ -3,6 +3,9 @@ const mobileDevSuccess = require('../templates/mobileDevSuccess');
 const mobileProdSuccess = require('../templates/mobileProdSuccess');
 const webSuccess = require('../templates/webSuccess');
 
+// @desc    Initiate Google OAuth authentication
+// @route   GET /api/auth/google
+// @access  Public
 exports.initiateGoogleAuth = (req, res, next) => {
     const isMobile = req.query.mobile === 'true';
     const redirectUri = req.query.redirectUri;
@@ -22,6 +25,9 @@ exports.initiateGoogleAuth = (req, res, next) => {
     require('passport').authenticate('google', authenticateOptions)(req, res, next);
 };
 
+// @desc    Google OAuth callback handler
+// @route   GET /api/auth/google/callback
+// @access  Public
 exports.googleCallback = (req, res) => {
     const token = googleAuthHandler.generateToken(req.user);
     const stateStr = String(req.query.state || '');
@@ -73,12 +79,18 @@ exports.googleCallback = (req, res) => {
     res.send(mobileDevSuccess(userEmail)); 
 };
 
+// @desc    Authentication failure handler
+// @route   GET /api/auth/failure
+// @access  Public
 exports.failure = (req, res) => {
     res.status(401).json({ error: 'Authentication Failed' });
 };
 
+// @desc    Get development token
+// @route   GET /api/auth/dev-token/:email
+// @access  Public
 exports.getDevToken = (req, res) => {
-    const userEmail = req.query.email;
+    const userEmail = req.params.email;
     if (process.env.NODE_ENV === 'production') {
         return res.status(403).json({ error: 'This endpoint is not available in production' });
     }
@@ -95,6 +107,9 @@ exports.getDevToken = (req, res) => {
     res.json({ token });
 };
 
+// @desc    Get latest development token
+// @route   GET /api/auth/dev-token-latest
+// @access  Public
 exports.getDevTokenLatest = (req, res) => {
     if (process.env.NODE_ENV === 'production') {
         return res.status(403).json({ error: 'This endpoint is not available in production' });
@@ -116,6 +131,9 @@ exports.getDevTokenLatest = (req, res) => {
     res.json({ token, email });
 };
 
+// @desc    Verify JWT token
+// @route   POST /api/auth/verify
+// @access  Public
 exports.verifyToken = (req, res) => {
     let token = null;
     const authorization = req.headers.authorization;

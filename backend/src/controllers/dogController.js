@@ -123,7 +123,7 @@ exports.createDog = async (req, res) => {
     });
     
     // Populate owner info in response
-    await dog.populate('ownerId', 'name phone email');
+    await dog.populate('ownerId', '_id name phone email');
     
     res.status(201).json({
       success: true,
@@ -181,7 +181,7 @@ exports.updateDog = async (req, res) => {
         new: true,
         runValidators: true
       }
-    ).populate('ownerId', 'name phone email');
+    ).populate('ownerId', '_id name phone email');
     
     if (!dog) {
       return res.status(404).json({
@@ -248,7 +248,7 @@ exports.searchDogs = async (req, res) => {
         { name: { $regex: searchTerm, $options: 'i' } },
         { breed: { $regex: searchTerm, $options: 'i' } }
       ]
-    }).populate('ownerId', 'name phone email');
+    }).populate('ownerId', '_id name phone email');
     
     res.json({
       success: true,

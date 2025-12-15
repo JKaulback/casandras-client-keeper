@@ -1,5 +1,8 @@
 const User = require('../models/User');
 
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Public
 exports.getAllUsers = async (req, res) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
@@ -16,6 +19,9 @@ exports.getAllUsers = async (req, res) => {
   }
 };
 
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Public
 exports.getUserById = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -39,6 +45,9 @@ exports.getUserById = async (req, res) => {
   }
 };
 
+// @desc    Create new user
+// @route   POST /api/users
+// @access  Public
 exports.createUser = async (req, res) => {
   try {
     const { name, email, phone, oauthProvider, oauthId, avatarUrl, role } = req.body;
@@ -74,6 +83,9 @@ exports.createUser = async (req, res) => {
   }
 };
 
+// @desc    Update user
+// @route   PUT /api/users/:id
+// @access  Public
 exports.updateUser = async (req, res) => {
   try {
     const { name, email, phone, avatarUrl, role } = req.body;
@@ -106,6 +118,9 @@ exports.updateUser = async (req, res) => {
   }
 };
 
+// @desc    Delete user
+// @route   DELETE /api/users/:id
+// @access  Public
 exports.deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -130,6 +145,9 @@ exports.deleteUser = async (req, res) => {
   }
 };
 
+// @desc    Get user by OAuth ID
+// @route   GET /api/users/oauth/:oauthId
+// @access  Public
 exports.getUserByOAuthId = async (req, res) => {
   try {
     const user = await User.findOne({ oauthId: req.params.oauthId });

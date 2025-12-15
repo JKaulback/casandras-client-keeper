@@ -1,5 +1,8 @@
 const Customer = require('../models/Customer');
 
+// @desc    Get all customers
+// @route   GET /api/customers
+// @access  Public
 exports.getAllCustomers = async (req, res) => {
   try {
     const customers = await Customer.find()
@@ -19,6 +22,9 @@ exports.getAllCustomers = async (req, res) => {
   }
 };
 
+// @desc    Get customer by ID
+// @route   GET /api/customers/:id
+// @access  Public
 exports.getCustomerById = async (req, res) => {
   try {
     const customer = await Customer.findById(req.params.id)
@@ -43,6 +49,9 @@ exports.getCustomerById = async (req, res) => {
   }
 };
 
+// @desc    Create new customer
+// @route   POST /api/customers
+// @access  Public
 exports.createCustomer = async (req, res) => {
   try {
     const { name, phone, email, occupation, address, userId } = req.body;
@@ -68,6 +77,9 @@ exports.createCustomer = async (req, res) => {
   }
 };
 
+// @desc    Update customer
+// @route   PUT /api/customers/:id
+// @access  Public
 exports.updateCustomer = async (req, res) => {
   try {
     const { name, phone, email, occupation, address, userId } = req.body;
@@ -100,6 +112,9 @@ exports.updateCustomer = async (req, res) => {
   }
 };
 
+// @desc    Delete customer
+// @route   DELETE /api/customers/:id
+// @access  Public
 exports.deleteCustomer = async (req, res) => {
   try {
     const customer = await Customer.findByIdAndDelete(req.params.id);
@@ -124,6 +139,9 @@ exports.deleteCustomer = async (req, res) => {
   }
 };
 
+// @desc    Search customers
+// @route   GET /api/customers/search?q=searchTerm
+// @access  Public
 exports.searchCustomers = async (req, res) => {
   try {
     const searchTerm = req.query.q;

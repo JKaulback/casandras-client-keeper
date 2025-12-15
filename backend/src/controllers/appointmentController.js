@@ -31,8 +31,8 @@ exports.getAllAppointments = async (req, res) => {
 exports.getAppointmentById = async (req, res) => {
   try {
     const appointment = await Appointment.findById(req.params.id)
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed');
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed');
     
     if (!appointment) {
       return res.status(404).json({
@@ -59,8 +59,8 @@ exports.getAppointmentById = async (req, res) => {
 exports.getAppointmentsByCustomer = async (req, res) => {
   try {
     const appointments = await Appointment.find({ customerId: req.params.customerId })
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed')
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed')
       .sort({ dateTime: 1 });
     
     res.json({
@@ -82,8 +82,8 @@ exports.getAppointmentsByCustomer = async (req, res) => {
 exports.getAppointmentsByDog = async (req, res) => {
   try {
     const appointments = await Appointment.find({ dogId: req.params.dogId })
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed')
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed')
       .sort({ dateTime: 1 });
     
     res.json({
@@ -119,8 +119,8 @@ exports.getAppointmentsByDateRange = async (req, res) => {
         $lte: new Date(end)
       }
     })
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed')
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed')
       .sort({ dateTime: 1 });
     
     res.json({
@@ -152,8 +152,8 @@ exports.getAppointmentsByStatus = async (req, res) => {
     }
     
     const appointments = await Appointment.find({ status })
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed')
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed')
       .sort({ dateTime: 1 });
     
     res.json({
@@ -192,7 +192,7 @@ exports.createAppointment = async (req, res) => {
     if (!customer) {
       return res.status(404).json({
         success: false,
-        error: 'Customer not found. Please provide a valid customerId.'
+        error: 'Customer not found. Please select a valid customer.'
       });
     }
     
@@ -201,7 +201,7 @@ exports.createAppointment = async (req, res) => {
     if (!dog) {
       return res.status(404).json({
         success: false,
-        error: 'Dog not found. Please provide a valid dogId.'
+        error: 'Dog not found. Please select a valid dog.'
       });
     }
     
@@ -227,8 +227,8 @@ exports.createAppointment = async (req, res) => {
     });
     
     // Populate customer and dog info in response
-    await appointment.populate('customerId', 'name phone email');
-    await appointment.populate('dogId', 'name breed');
+    await appointment.populate('customerId', '_id name phone email');
+    await appointment.populate('dogId', '_id name breed');
     
     res.status(201).json({
       success: true,
@@ -281,8 +281,8 @@ exports.updateAppointment = async (req, res) => {
         runValidators: true
       }
     )
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed');
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed');
     
     if (!appointment) {
       return res.status(404).json({
@@ -340,8 +340,8 @@ exports.cancelAppointment = async (req, res) => {
       { status: 'cancelled' },
       { new: true }
     )
-      .populate('customerId', 'name phone email')
-      .populate('dogId', 'name breed');
+      .populate('customerId', '_id name phone email')
+      .populate('dogId', '_id name breed');
     
     if (!appointment) {
       return res.status(404).json({
